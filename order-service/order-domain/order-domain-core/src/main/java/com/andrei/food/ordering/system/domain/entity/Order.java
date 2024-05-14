@@ -2,20 +2,72 @@ package com.andrei.food.ordering.system.domain.entity;
 
 import com.andrei.food.ordering.system.domain.domain.entity.AggregateRoot;
 import com.andrei.food.ordering.system.domain.domain.valueobject.*;
+import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
+import com.andrei.food.ordering.system.domain.valueobject.OrderItemId;
 import com.andrei.food.ordering.system.domain.valueobject.StreetAddress;
 import com.andrei.food.ordering.system.domain.valueobject.TrackingId;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Order extends AggregateRoot<OrderId> {
     private final CustomerId customerId;
     private final RestaurantId restaurantId;
     private final StreetAddress deliveryAddress;
     private final Money price;
-    private final List<OrderItem> orderItems;
+    private final List<OrderItem> items;
+
     private TrackingId trackingId;
     private OrderStatus orderStatus;
     private List<String> failureMessages;
+
+    public void initiateOrder(TrackingId trackingId) {
+        setId(new OrderId(UUID.randomUUID()));
+        this.trackingId = new TrackingId(UUID.randomUUID());
+        this.orderStatus = OrderStatus.PENDING;
+        initializeOrderItems();
+    }
+
+    public void validateOrder() {
+        validateInitialOrder();
+        validateTotalPrice();
+        validateItemsPrice();
+    }
+
+    private void validateItemsPrice() {
+        Money orderItemsTotal = items.stream().map(orderItem -> {
+            validateItemPrice(orderItem);
+            return orderItem.getSubTotal();
+        }).reduce(Money.ZERO, Money::add);
+        if(!orderItemsTotal.equals(price)) {
+            throw new OrderDomainException("Total price: " +price.getAmount()+" is not equal to the sum of the items price"+orderItemsTotal.getAmount());
+        }
+    }
+
+    private void validateItemPrice(OrderItem orderItem) {
+        if(!orderItem.isPriceValid()) {
+            throw new OrderDomainException("Order item price is not valid");
+        }
+    }
+
+    private void validateTotalPrice() {
+        if(price == null || !price.isGreaterThanZero()) {
+            throw new OrderDomainException("Total price must be greater than zero");
+        }
+    }
+
+    private void validateInitialOrder() {
+        if(orderStatus != null || getId() != null) {
+            throw new OrderDomainException("Order is already initiated");
+        }
+    }
+
+    private void initializeOrderItems() {
+        long itemId = 1;
+        for (OrderItem orderItem : items) {
+            orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
+        }
+    }
 
     private Order(Builder builder) {
         super.setId(builder.orderId);
@@ -23,7 +75,7 @@ public class Order extends AggregateRoot<OrderId> {
         restaurantId = builder.restaurantId;
         deliveryAddress = builder.deliveryAddress;
         price = builder.price;
-        orderItems = builder.orderItems;
+        items = builder.items;
         trackingId = builder.trackingId;
         orderStatus = builder.orderStatus;
         failureMessages = builder.failureMessages;
@@ -45,8 +97,8 @@ public class Order extends AggregateRoot<OrderId> {
         return price;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
     public TrackingId getTrackingId() {
@@ -67,7 +119,7 @@ public class Order extends AggregateRoot<OrderId> {
         private RestaurantId restaurantId;
         private StreetAddress deliveryAddress;
         private Money price;
-        private List<OrderItem> orderItems;
+        private List<OrderItem> items;
         private TrackingId trackingId;
         private OrderStatus orderStatus;
         private List<String> failureMessages;
@@ -104,8 +156,8 @@ public class Order extends AggregateRoot<OrderId> {
             return this;
         }
 
-        public Builder orderItems(List<OrderItem> val) {
-            orderItems = val;
+        public Builder items(List<OrderItem> val) {
+            items = val;
             return this;
         }
 

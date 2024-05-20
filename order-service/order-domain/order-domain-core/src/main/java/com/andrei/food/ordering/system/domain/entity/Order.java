@@ -21,7 +21,7 @@ public class Order extends AggregateRoot<OrderId> {
     private OrderStatus orderStatus;
     private List<String> failureMessages;
 
-    public void initiateOrder(TrackingId trackingId) {
+    public void initializeOrder() {
         setId(new OrderId(UUID.randomUUID()));
         this.trackingId = new TrackingId(UUID.randomUUID());
         this.orderStatus = OrderStatus.PENDING;

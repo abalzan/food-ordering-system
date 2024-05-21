@@ -7,6 +7,7 @@ import com.andrei.food.ordering.system.domain.valueobject.OrderItemId;
 import com.andrei.food.ordering.system.domain.valueobject.StreetAddress;
 import com.andrei.food.ordering.system.domain.valueobject.TrackingId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,7 +80,7 @@ public class Order extends AggregateRoot<OrderId> {
             return orderItem.getSubTotal();
         }).reduce(Money.ZERO, Money::add);
         if(!orderItemsTotal.equals(price)) {
-            throw new OrderDomainException("Total price: " +price.getAmount()+" is not equal to the sum of the items price"+orderItemsTotal.getAmount());
+            throw new OrderDomainException(STR."Total price: \{price.getAmount()} is not equal to the sum of the items price \{orderItemsTotal.getAmount()}");
         }
     }
 
@@ -158,10 +159,10 @@ public class Order extends AggregateRoot<OrderId> {
         private RestaurantId restaurantId;
         private StreetAddress deliveryAddress;
         private Money price;
-        private List<OrderItem> items;
+        private List<OrderItem> items = new ArrayList<>();
         private TrackingId trackingId;
         private OrderStatus orderStatus;
-        private List<String> failureMessages;
+        private List<String> failureMessages = new ArrayList<>();
 
         private Builder() {
         }

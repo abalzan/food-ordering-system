@@ -3,6 +3,7 @@ package com.andrei.food.ordering.system.domain.entity;
 import com.andrei.food.ordering.system.domain.domain.entity.AggregateRoot;
 import com.andrei.food.ordering.system.domain.domain.valueobject.RestaurantId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant extends AggregateRoot<RestaurantId> {
@@ -25,7 +26,7 @@ public class Restaurant extends AggregateRoot<RestaurantId> {
 
     public static final class Builder {
         private RestaurantId restaurantId;
-        private List<Product> products;
+        private List<Product> products = new ArrayList<>();
         private boolean active;
 
         private Builder() {

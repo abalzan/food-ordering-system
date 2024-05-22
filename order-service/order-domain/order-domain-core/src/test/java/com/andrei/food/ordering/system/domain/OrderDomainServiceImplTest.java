@@ -1,6 +1,5 @@
 package com.andrei.food.ordering.system.domain;
 
-import com.andrei.food.ordering.system.domain.domain.valueobject.*;
 import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.OrderItem;
 import com.andrei.food.ordering.system.domain.entity.Product;
@@ -9,6 +8,7 @@ import com.andrei.food.ordering.system.domain.event.OrderCanceledEvent;
 import com.andrei.food.ordering.system.domain.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
+import com.andrei.food.ordering.system.domain.valueobject.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

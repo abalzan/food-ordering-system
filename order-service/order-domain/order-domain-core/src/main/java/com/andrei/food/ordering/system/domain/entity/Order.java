@@ -1,11 +1,7 @@
 package com.andrei.food.ordering.system.domain.entity;
 
-import com.andrei.food.ordering.system.domain.domain.entity.AggregateRoot;
-import com.andrei.food.ordering.system.domain.domain.valueobject.*;
 import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
-import com.andrei.food.ordering.system.domain.valueobject.OrderItemId;
-import com.andrei.food.ordering.system.domain.valueobject.StreetAddress;
-import com.andrei.food.ordering.system.domain.valueobject.TrackingId;
+import com.andrei.food.ordering.system.domain.valueobject.*;
 
 import java.util.ArrayList;
 import java.util.List;

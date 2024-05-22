@@ -1,7 +1,5 @@
 package com.andrei.food.ordering.system.domain.valueobject;
 
-import com.andrei.food.ordering.system.domain.domain.valueobject.BaseId;
-
 public class OrderItemId extends BaseId<Long> {
 
     public OrderItemId(Long value) {

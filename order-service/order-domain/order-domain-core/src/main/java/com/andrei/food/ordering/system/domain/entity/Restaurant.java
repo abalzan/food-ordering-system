@@ -1,7 +1,6 @@
 package com.andrei.food.ordering.system.domain.entity;
 
-import com.andrei.food.ordering.system.domain.domain.entity.AggregateRoot;
-import com.andrei.food.ordering.system.domain.domain.valueobject.RestaurantId;
+import com.andrei.food.ordering.system.domain.valueobject.RestaurantId;
 
 import java.util.ArrayList;
 import java.util.List;

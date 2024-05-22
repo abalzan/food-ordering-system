@@ -1,8 +1,7 @@
 package com.andrei.food.ordering.system.domain.entity;
 
-import com.andrei.food.ordering.system.domain.domain.entity.BaseEntity;
-import com.andrei.food.ordering.system.domain.domain.valueobject.Money;
-import com.andrei.food.ordering.system.domain.domain.valueobject.OrderId;
+import com.andrei.food.ordering.system.domain.valueobject.Money;
+import com.andrei.food.ordering.system.domain.valueobject.OrderId;
 import com.andrei.food.ordering.system.domain.valueobject.OrderItemId;
 
 public class OrderItem extends BaseEntity<OrderItemId> {

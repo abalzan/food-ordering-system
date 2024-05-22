@@ -2,8 +2,8 @@ package com.andrei.food.ordering.system.domain.valueobject;
 
 import java.util.UUID;
 
-public class TrackingId extends BaseId<UUID> {
-    public TrackingId(UUID value) {
+public class RestaurantId extends BaseId<UUID>{
+    public RestaurantId(UUID value) {
         super(value);
     }
 }

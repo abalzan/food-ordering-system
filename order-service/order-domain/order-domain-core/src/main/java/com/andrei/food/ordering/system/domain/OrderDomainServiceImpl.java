@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.domain;
 
-import com.andrei.food.ordering.system.domain.domain.valueobject.ProductId;
+import com.andrei.food.ordering.system.domain.valueobject.ProductId;
 import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.Product;
 import com.andrei.food.ordering.system.domain.entity.Restaurant;

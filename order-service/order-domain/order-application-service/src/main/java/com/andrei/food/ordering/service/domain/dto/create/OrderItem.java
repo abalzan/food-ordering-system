@@ -1,7 +1,7 @@
 package com.andrei.food.ordering.service.domain.dto.create;
 
+import com.andrei.food.ordering.system.domain.valueobject.ProductId;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 

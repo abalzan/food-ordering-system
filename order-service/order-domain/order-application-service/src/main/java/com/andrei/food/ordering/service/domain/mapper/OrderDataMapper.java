@@ -4,6 +4,7 @@ import com.andrei.food.ordering.service.domain.dto.create.CreateOrderCommand;
 import com.andrei.food.ordering.service.domain.dto.create.CreateOrderResponse;
 import com.andrei.food.ordering.service.domain.dto.create.OrderAddress;
 import com.andrei.food.ordering.service.domain.dto.create.OrderItem;
+import com.andrei.food.ordering.service.domain.dto.track.TrackOrderResponse;
 import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.Product;
 import com.andrei.food.ordering.system.domain.entity.Restaurant;
@@ -39,6 +40,14 @@ public class OrderDataMapper {
         return CreateOrderResponse.builder()
                 .orderTrackingId(order.getTrackingId().getValue())
                 .orderStatus(order.getOrderStatus())
+                .build();
+    }
+
+    public TrackOrderResponse orderToTrackOrderResponse(Order order) {
+        return TrackOrderResponse.builder()
+                .orderTrackingId(order.getTrackingId().getValue())
+                .orderStatus(order.getOrderStatus())
+                .failureMessages(order.getFailureMessages())
                 .build();
     }
 

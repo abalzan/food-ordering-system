@@ -8,7 +8,6 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
 @Builder
 public record OrderItem(@NotNull UUID productId, @NotNull Integer quantity, @NotNull BigDecimal price,
                         @NotNull BigDecimal subTotal) {

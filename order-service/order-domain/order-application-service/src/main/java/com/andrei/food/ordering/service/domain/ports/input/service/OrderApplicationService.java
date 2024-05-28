@@ -7,7 +7,7 @@ import com.andrei.food.ordering.service.domain.dto.track.TrackOrderResponse;
 import jakarta.validation.Valid;
 
 public interface OrderApplicationService {
-    CreateOrderResponse createOder(@Valid CreateOrderCommand createOrderCommand);
+    CreateOrderResponse createOrder(@Valid CreateOrderCommand createOrderCommand);
 
     TrackOrderResponse trackOrder(@Valid TrackOrderQuery trackOrderQuery);
 

@@ -76,7 +76,7 @@ public class Order extends AggregateRoot<OrderId> {
             return orderItem.getSubTotal();
         }).reduce(Money.ZERO, Money::add);
         if(!orderItemsTotal.equals(price)) {
-            throw new OrderDomainException(STR."Total price: \{price.getAmount()} is not equal to the sum of the items price \{orderItemsTotal.getAmount()}");
+            throw new OrderDomainException("Total price: "+price.getAmount()+" is not equal to the sum of the items price " + orderItemsTotal.getAmount());
         }
     }
 

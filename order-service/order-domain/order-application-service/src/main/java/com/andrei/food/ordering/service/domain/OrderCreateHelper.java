@@ -64,7 +64,7 @@ public class OrderCreateHelper {
     }
 
     private Order saveOrder(Order order) {
-        Order savedOrder = orderRepository.saveOrder(order);
+        Order savedOrder = orderRepository.save(order);
         if (savedOrder == null) {
             log.warn("Order with id {} not saved", order.getId());
             throw new OrderDomainException("Could not save order with id: " + order.getId());

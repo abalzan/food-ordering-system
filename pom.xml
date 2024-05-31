@@ -21,6 +21,7 @@
   <modules>
     <module>order-service</module>
     <module>common</module>
+    <module>infrastructure</module>
   </modules>
 
   <dependencyManagement>

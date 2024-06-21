@@ -36,6 +36,4 @@ public class OrderGlobalExceptionHandler extends GlobalExceptionHandler {
                 .code(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .build();
     }
-
-
 }

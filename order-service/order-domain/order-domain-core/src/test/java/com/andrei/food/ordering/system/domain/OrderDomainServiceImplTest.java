@@ -4,7 +4,7 @@ import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.OrderItem;
 import com.andrei.food.ordering.system.domain.entity.Product;
 import com.andrei.food.ordering.system.domain.entity.Restaurant;
-import com.andrei.food.ordering.system.domain.event.OrderCanceledEvent;
+import com.andrei.food.ordering.system.domain.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.domain.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
@@ -183,7 +183,7 @@ class OrderDomainServiceImplTest {
                 .build();
 
         // When
-        OrderCanceledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
+        OrderCancelledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
 
         // Then
         assertNotNull(event);

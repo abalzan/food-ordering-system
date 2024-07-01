@@ -4,7 +4,7 @@ import com.andrei.food.ordering.system.domain.valueobject.ProductId;
 import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.Product;
 import com.andrei.food.ordering.system.domain.entity.Restaurant;
-import com.andrei.food.ordering.system.domain.event.OrderCanceledEvent;
+import com.andrei.food.ordering.system.domain.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.domain.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
@@ -45,10 +45,10 @@ public class OrderDomainServiceImpl implements OrderDomainService{
     }
 
     @Override
-    public OrderCanceledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
+    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
         order.initCancel(failureMessages);
         log.info("Order payment is cancelling for orderId {}", order.getId().getValue());
-        return new OrderCanceledEvent(order, ZonedDateTime.now(ZoneId.of(UTC)));
+        return new OrderCancelledEvent(order, ZonedDateTime.now(ZoneId.of(UTC)));
     }
 
     @Override

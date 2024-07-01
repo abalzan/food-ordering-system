@@ -2,7 +2,7 @@ package com.andrei.food.ordering.system.domain;
 
 import com.andrei.food.ordering.system.domain.entity.Order;
 import com.andrei.food.ordering.system.domain.entity.Restaurant;
-import com.andrei.food.ordering.system.domain.event.OrderCanceledEvent;
+import com.andrei.food.ordering.system.domain.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.domain.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
 
@@ -16,7 +16,7 @@ public interface OrderDomainService {
 
     void ApproveOrder(Order order);
 
-    OrderCanceledEvent cancelOrderPayment(Order order, List<String> failureMessages);
+    OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages);
 
     void cancelOrder(Order order, List<String> failureMessages);
 }

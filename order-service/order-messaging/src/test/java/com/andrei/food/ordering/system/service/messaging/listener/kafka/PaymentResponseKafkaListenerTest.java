@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.listener.kafka;
 
-import com.andrei.food.ordering.service.domain.ports.input.message.listener.payment.PaymentResponseMessageListener;
+import com.andrei.food.ordering.system.service.domain.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentResponseAvroModel;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentStatus;
 import com.andrei.food.ordering.system.service.messaging.mapper.OrderMessagingDataMapper;

@@ -1,9 +1,9 @@
 package com.andrei.food.ordering.system.service.dataaccess.order.mapper;
 
-import com.andrei.food.ordering.system.domain.entity.Order;
-import com.andrei.food.ordering.system.domain.entity.OrderItem;
-import com.andrei.food.ordering.system.domain.entity.Product;
-import com.andrei.food.ordering.system.domain.valueobject.*;
+import com.andrei.food.ordering.system.service.entity.Order;
+import com.andrei.food.ordering.system.service.entity.OrderItem;
+import com.andrei.food.ordering.system.service.entity.Product;
+import com.andrei.food.ordering.system.service.valueobject.*;
 import com.andrei.food.ordering.system.service.dataaccess.order.entity.OrderAddressEntity;
 import com.andrei.food.ordering.system.service.dataaccess.order.entity.OrderEntity;
 import com.andrei.food.ordering.system.service.dataaccess.order.entity.OrderItemEntity;

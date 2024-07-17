@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.kafka.support.SendResult;
 
+import java.util.function.BiConsumer;
+
 import static org.mockito.Mockito.*;
 
 class OrderKafkaMessageHelperTest {
@@ -34,7 +36,9 @@ class OrderKafkaMessageHelperTest {
         when(recordMetadata.offset()).thenReturn(1L);
         when(recordMetadata.timestamp()).thenReturn(1L);
 
-        orderKafkaMessageHelper.getKafkaCallback("testTopic", "testMessage", "testOrderId", "testMessageName").onSuccess(sendResult);
+        // Simulate successful message sending
+        BiConsumer<SendResult<String, String>, Throwable> callback = orderKafkaMessageHelper.getKafkaCallback("testTopic", "testMessage", "testOrderId", "testMessageName");
+        callback.accept(sendResult, null); // No exception indicates success
     }
 
     @Test
@@ -42,6 +46,8 @@ class OrderKafkaMessageHelperTest {
     void shouldLogErrorWhenMessageSendingFails() {
         Throwable ex = new RuntimeException("test exception");
 
-        orderKafkaMessageHelper.getKafkaCallback("testTopic", "testMessage", "testOrderId", "testMessageName").onFailure(ex);
+        // Simulate failure in message sending
+        BiConsumer<SendResult<String, String>, Throwable> callback = orderKafkaMessageHelper.getKafkaCallback("testTopic", "testMessage", "testOrderId", "testMessageName");
+        callback.accept(null, ex); // Passing exception indicates failure
     }
 }

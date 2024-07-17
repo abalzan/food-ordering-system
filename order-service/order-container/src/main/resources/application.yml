@@ -18,12 +18,12 @@ spring:
       database-platform: org.hibernate.dialect.PostgreSQL9Dialect
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.PostgreSQL9Dialect
+          dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=order&bynaryTransfer=true&rewriteBatchedInserts=true&stringtype=unspecified
     username: postgres
     password: postgres
-    driver-class-name: com.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
   sql:
     init:
       schema-locations: classpath:init-schema.sql

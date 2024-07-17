@@ -8,9 +8,10 @@ import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.Serializable;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @Component
@@ -23,10 +24,11 @@ public class KafkaProducerImpl<K extends Serializable, V extends SpecificRecordB
     }
 
     @Override
-    public void send(String topicName, K key, V message, ListenableFutureCallback<SendResult<K, V>> callback) {
+    public void send(String topicName, K key, V message, BiConsumer<SendResult<K, V>, Throwable> callback) {
         log.info("Sending message='{}' to topic='{}'", message, topicName);
         try {
-            kafkaTemplate.send(topicName, key, message).addCallback(callback);
+            CompletableFuture<SendResult<K, V>> kafkaResultFuture = kafkaTemplate.send(topicName, key, message);
+            kafkaResultFuture.whenComplete(callback);
         } catch (KafkaException e) {
             log.error("Error sending message='{}' to topic='{}'", message, topicName, e);
             throw new KafkaProducerException("Error sending message= "+message+" to topic=" +topicName);

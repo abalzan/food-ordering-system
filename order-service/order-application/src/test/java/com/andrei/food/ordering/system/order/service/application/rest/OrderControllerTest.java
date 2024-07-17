@@ -1,10 +1,10 @@
 package com.andrei.food.ordering.system.order.service.application.rest;
 
-import com.andrei.food.ordering.service.domain.dto.create.CreateOrderCommand;
-import com.andrei.food.ordering.service.domain.dto.create.CreateOrderResponse;
-import com.andrei.food.ordering.service.domain.dto.track.TrackOrderQuery;
-import com.andrei.food.ordering.service.domain.dto.track.TrackOrderResponse;
-import com.andrei.food.ordering.service.domain.ports.input.service.OrderApplicationService;
+import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
+import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
+import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderQuery;
+import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
+import com.andrei.food.ordering.system.service.domain.ports.input.service.OrderApplicationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

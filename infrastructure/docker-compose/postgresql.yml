@@ -10,3 +10,5 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - "./volumes/pgdata:/var/lib/postgresql/data"
+    networks:
+      - ${GLOBAL_NETWORK:-kafka}

@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.listener.kafka;
 
-import com.andrei.food.ordering.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
+import com.andrei.food.ordering.system.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
 import com.andrei.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.andrei.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
 import com.andrei.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
@@ -29,8 +29,8 @@ public class RestaurantApprovalResponseKafkaListener implements KafkaConsumer<Re
     @KafkaListener(id = "${kafka-consumer-config.restaurant-approval-consumer-group-id}",
             topics = "${order-service.restaurant-approval-response-topic-name}")
     public void receive(@Payload List<RestaurantApprovalResponseAvroModel> messages,
-                        @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) List<String> keys,
-                        @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
+                        @Header(KafkaHeaders.RECEIVED_KEY) List<String> keys,
+                        @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,
                         @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
 
         log.info("{} number of restaurant approval responses received with keys {} from partitions {} with offsets {}",

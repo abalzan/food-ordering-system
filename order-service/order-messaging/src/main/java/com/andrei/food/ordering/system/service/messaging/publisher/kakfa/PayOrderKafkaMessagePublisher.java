@@ -1,8 +1,8 @@
 package com.andrei.food.ordering.system.service.messaging.publisher.kakfa;
 
-import com.andrei.food.ordering.service.domain.config.OrderServiceConfigData;
-import com.andrei.food.ordering.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
-import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
+import com.andrei.food.ordering.system.service.domain.config.OrderServiceConfigData;
+import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
+import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.kafka.order.avro.model.RestaurantApprovalRequestAvroModel;
 import com.andrei.food.ordering.system.kafka.producer.service.KafkaProducer;
 import com.andrei.food.ordering.system.service.messaging.mapper.OrderMessagingDataMapper;

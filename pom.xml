@@ -15,9 +15,9 @@
 
   <packaging>pom</packaging>
   <properties>
-    <maven-complier-plugin.version>3.9.0</maven-complier-plugin.version>
-    <spring-kafka.version>2.8.2</spring-kafka.version>
-    <kafka-avro-serializer.version>7.0.1</kafka-avro-serializer.version>
+    <maven-complier-plugin.version>3.10.1</maven-complier-plugin.version>
+    <spring-kafka.version>3.2.1</spring-kafka.version>
+    <kafka-avro-serializer.version>7.2.1</kafka-avro-serializer.version>
     <avro.version>1.11.3</avro.version>
   </properties>
 
@@ -25,6 +25,7 @@
     <module>order-service</module>
     <module>common</module>
     <module>infrastructure</module>
+    <module>customer-service</module>
   </modules>
 
   <dependencyManagement>

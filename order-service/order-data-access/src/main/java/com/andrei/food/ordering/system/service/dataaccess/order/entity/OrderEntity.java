@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.dataaccess.order.entity;
 
-import com.andrei.food.ordering.system.domain.valueobject.OrderStatus;
+import com.andrei.food.ordering.system.service.valueobject.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

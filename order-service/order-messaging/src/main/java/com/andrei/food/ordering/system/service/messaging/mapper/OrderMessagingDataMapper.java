@@ -1,11 +1,11 @@
 package com.andrei.food.ordering.system.service.messaging.mapper;
 
-import com.andrei.food.ordering.service.domain.dto.message.PaymentResponse;
-import com.andrei.food.ordering.service.domain.dto.message.RestaurantApprovalResponse;
-import com.andrei.food.ordering.system.domain.entity.Order;
-import com.andrei.food.ordering.system.domain.event.OrderCancelledEvent;
-import com.andrei.food.ordering.system.domain.event.OrderCreatedEvent;
-import com.andrei.food.ordering.system.domain.event.OrderPaidEvent;
+import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
+import com.andrei.food.ordering.system.service.domain.dto.message.RestaurantApprovalResponse;
+import com.andrei.food.ordering.system.service.entity.Order;
+import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
+import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
+import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.kafka.order.avro.model.*;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +70,7 @@ public class OrderMessagingDataMapper {
                 .orderId(paymentResponseAvroModel.getOrderId().toString())
                 .price(paymentResponseAvroModel.getPrice())
                 .createAt(paymentResponseAvroModel.getCreatedAt())
-                .paymentStatus(com.andrei.food.ordering.system.domain.valueobject.PaymentStatus.valueOf(paymentResponseAvroModel.getPaymentStatus().name()))
+                .paymentStatus(com.andrei.food.ordering.system.service.valueobject.PaymentStatus.valueOf(paymentResponseAvroModel.getPaymentStatus().name()))
                 .failureMessages(paymentResponseAvroModel.getFailureMessages())
                 .build();
     }
@@ -82,7 +82,7 @@ public class OrderMessagingDataMapper {
                 .orderId(restaurantApprovalResponseAvroModel.getOrderId().toString())
                 .restaurantId(restaurantApprovalResponseAvroModel.getRestaurantId().toString())
                 .createAt(restaurantApprovalResponseAvroModel.getCreatedAt())
-                .orderApprovalStatus(com.andrei.food.ordering.system.domain.valueobject.OrderApprovalStatus.valueOf(restaurantApprovalResponseAvroModel.getOrderApprovalStatus().name()))
+                .orderApprovalStatus(com.andrei.food.ordering.system.service.valueobject.OrderApprovalStatus.valueOf(restaurantApprovalResponseAvroModel.getOrderApprovalStatus().name()))
                 .failureMessages(restaurantApprovalResponseAvroModel.getFailureMessages())
                 .build();
     }

@@ -1,10 +1,10 @@
 package com.andrei.food.ordering.system.order.service.application.rest;
 
-import com.andrei.food.ordering.service.domain.dto.create.CreateOrderCommand;
-import com.andrei.food.ordering.service.domain.dto.create.CreateOrderResponse;
-import com.andrei.food.ordering.service.domain.dto.track.TrackOrderQuery;
-import com.andrei.food.ordering.service.domain.dto.track.TrackOrderResponse;
-import com.andrei.food.ordering.service.domain.ports.input.service.OrderApplicationService;
+import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
+import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
+import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderQuery;
+import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
+import com.andrei.food.ordering.system.service.domain.ports.input.service.OrderApplicationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

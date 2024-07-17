@@ -2,8 +2,8 @@ package com.andrei.food.ordering.system.order.service.application.exception.hand
 
 import com.andrei.food.ordering.system.application.handler.ErrorDTO;
 import com.andrei.food.ordering.system.application.handler.GlobalExceptionHandler;
-import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
-import com.andrei.food.ordering.system.domain.exception.OrderNotFoundException;
+import com.andrei.food.ordering.system.service.exception.OrderDomainException;
+import com.andrei.food.ordering.system.service.exception.OrderNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,7 +27,7 @@ public class OrderGlobalExceptionHandler extends GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(OrderDomainException.class)
+    @ExceptionHandler(OrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleException(OrderNotFoundException orderNotFoundException) {
         log.error("OrderNotFoundException: {}", orderNotFoundException.getMessage(), orderNotFoundException);

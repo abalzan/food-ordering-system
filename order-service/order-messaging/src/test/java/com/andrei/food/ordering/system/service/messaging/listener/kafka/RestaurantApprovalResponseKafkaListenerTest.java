@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.listener.kafka;
 
-import com.andrei.food.ordering.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
+import com.andrei.food.ordering.system.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
 import com.andrei.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
 import com.andrei.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
 import com.andrei.food.ordering.system.service.messaging.mapper.OrderMessagingDataMapper;

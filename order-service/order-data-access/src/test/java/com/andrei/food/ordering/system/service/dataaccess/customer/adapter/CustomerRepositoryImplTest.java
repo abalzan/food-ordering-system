@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.dataaccess.customer.adapter;
 
-import com.andrei.food.ordering.system.domain.entity.Customer;
+import com.andrei.food.ordering.system.service.entity.Customer;
 import com.andrei.food.ordering.system.service.dataaccess.customer.repository.CustomerJpaRepository;
 import com.andrei.food.ordering.system.service.dataaccess.customer.mapper.CustomerDataAccessMapper;
 import org.junit.jupiter.api.BeforeEach;

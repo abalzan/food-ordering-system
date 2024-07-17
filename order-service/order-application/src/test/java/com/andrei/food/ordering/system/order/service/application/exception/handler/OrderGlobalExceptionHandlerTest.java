@@ -1,8 +1,8 @@
 package com.andrei.food.ordering.system.order.service.application.exception.handler;
 
 import com.andrei.food.ordering.system.application.handler.ErrorDTO;
-import com.andrei.food.ordering.system.domain.exception.OrderDomainException;
-import com.andrei.food.ordering.system.domain.exception.OrderNotFoundException;
+import com.andrei.food.ordering.system.service.exception.OrderDomainException;
+import com.andrei.food.ordering.system.service.exception.OrderNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

@@ -1,8 +1,8 @@
 package com.andrei.food.ordering.system.service.dataaccess.order.adapter;
 
-import com.andrei.food.ordering.service.domain.ports.output.repository.OrderRepository;
-import com.andrei.food.ordering.system.domain.entity.Order;
-import com.andrei.food.ordering.system.domain.valueobject.TrackingId;
+import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
+import com.andrei.food.ordering.system.service.entity.Order;
+import com.andrei.food.ordering.system.service.valueobject.TrackingId;
 import com.andrei.food.ordering.system.service.dataaccess.order.mapper.OrderDataAccessMapper;
 import com.andrei.food.ordering.system.service.dataaccess.order.repository.OrderJpaRepository;
 import org.springframework.stereotype.Component;

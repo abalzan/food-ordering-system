@@ -1,6 +1,6 @@
 package com.andrei.food.ordering.system.service.dataaccess.restaurant.adapter;
-import com.andrei.food.ordering.system.domain.entity.Restaurant;
-import com.andrei.food.ordering.system.domain.valueobject.RestaurantId;
+import com.andrei.food.ordering.system.service.entity.Restaurant;
+import com.andrei.food.ordering.system.service.valueobject.RestaurantId;
 import com.andrei.food.ordering.system.service.dataaccess.restaurant.entity.RestaurantEntity;
 import com.andrei.food.ordering.system.service.dataaccess.restaurant.mapper.RestaurantDataAccessMapper;
 import com.andrei.food.ordering.system.service.dataaccess.restaurant.repository.RestaurantJpaRepository;

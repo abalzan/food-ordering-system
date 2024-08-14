@@ -10,6 +10,7 @@ import com.andrei.food.ordering.system.domain.event.PaymentFailedEvent;
 import com.andrei.food.ordering.system.domain.valueobject.CreditHistoryId;
 import com.andrei.food.ordering.system.domain.valueobject.TransactionType;
 import com.andrei.food.ordering.system.service.DomainConstants;
+import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.valueobject.Money;
 import com.andrei.food.ordering.system.service.valueobject.PaymentStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class PaymentDomainServiceImpl implements PaymentDomainService {
 
     @Override
-    public PaymentEvent validateAndInitiatePayment(Payment payment, CreditEntry creditEntry, List<CreditHistory> creditHistories, List<String> failureMessages) {
+    public PaymentEvent validateAndInitiatePayment(Payment payment, CreditEntry creditEntry, List<CreditHistory> creditHistories, List<String> failureMessages, DomainEventPublisher<PaymentCompletedEvent> paymentCompletedEventDomainEventPublisher, DomainEventPublisher<PaymentFailedEvent> paymentFailedEventDomainEventPublisher) {
         payment.validatePayment(failureMessages);
         payment.initializePayment();
         validateCreditEntry(payment, creditEntry, failureMessages);
@@ -34,16 +35,16 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
         if (!failureMessages.isEmpty()) {
             log.info("Payment initiation for customer with id: {} has failed", payment.getCustomerId().getValue());
             payment.updateStatus(PaymentStatus.FAILED);
-            return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), failureMessages);
+            return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), failureMessages, paymentFailedEventDomainEventPublisher);
         }
 
         log.info("Payment for customer with id: {} has been successfully initiated", payment.getCustomerId().getValue());
         payment.updateStatus(PaymentStatus.COMPLETED);
-        return new PaymentCompletedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)));
+        return new PaymentCompletedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), paymentCompletedEventDomainEventPublisher);
     }
 
     @Override
-    public PaymentEvent validateAndCancelPayment(Payment payment, CreditEntry creditEntry, List<CreditHistory> creditHistories, List<String> failureMessages) {
+    public PaymentEvent validateAndCancelPayment(Payment payment, CreditEntry creditEntry, List<CreditHistory> creditHistories, List<String> failureMessages, DomainEventPublisher<PaymentCancelledEvent> paymentCancelledEventDomainEventPublisher, DomainEventPublisher<PaymentFailedEvent> paymentFailedEventDomainEventPublisher) {
         payment.validatePayment(failureMessages);
         addCreditEntry(payment, creditEntry);
         updateCreditHistory(payment, creditHistories, TransactionType.CREDIT);
@@ -51,11 +52,11 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
         if(!failureMessages.isEmpty()){
             log.info("Payment cancellation for customer with id: {} has failed", payment.getCustomerId().getValue());
             payment.updateStatus(PaymentStatus.FAILED);
-            return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), failureMessages);
+            return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), failureMessages, paymentFailedEventDomainEventPublisher);
         }
         log.info("Payment for customer with id: {} has been successfully cancelled", payment.getCustomerId().getValue());
         payment.updateStatus(PaymentStatus.CANCELLED);
-        return new PaymentCancelledEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)));
+        return new PaymentCancelledEvent(payment, ZonedDateTime.now(ZoneId.of(DomainConstants.UTC)), paymentCancelledEventDomainEventPublisher);
     }
 
     private void validateCreditEntry(Payment payment, CreditEntry creditEntry, List<String> failureMessages) {

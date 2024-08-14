@@ -7,8 +7,10 @@ import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
+import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.exception.OrderDomainException;
 import com.andrei.food.ordering.system.service.valueobject.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -16,8 +18,20 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class OrderDomainServiceImplTest {
+
+    private DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher;
+    private DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher;
+    private DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher;
+
+    @BeforeEach
+    void setUp() {
+        orderCreatedEventDomainEventPublisher = mock(DomainEventPublisher.class);
+        orderCancelledEventDomainEventPublisher = mock(DomainEventPublisher.class);
+        orderPaidEventDomainEventPublisher = mock(DomainEventPublisher.class);
+    }
 
     @Test
     void validateAndInitiateOrderShouldCreateOrderWhenRestaurantIsActiveAndProductsAreValid() {
@@ -37,7 +51,7 @@ class OrderDomainServiceImplTest {
                 .price(new Money(new BigDecimal("10.00"))) //OrderPrice
                 .build();
         // When
-        OrderCreatedEvent event = orderDomainService.validateAndInitiateOrder(order, restaurant);
+        OrderCreatedEvent event = orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
 
         // Then
         assertNotNull(event);
@@ -57,7 +71,7 @@ class OrderDomainServiceImplTest {
 
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant);
+            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
         });
 
         // Then
@@ -78,7 +92,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant);
+            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
         });
 
         // Then
@@ -103,7 +117,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant);
+            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
         });
 
         // Then
@@ -119,7 +133,7 @@ class OrderDomainServiceImplTest {
         .build();
 
         // When
-        OrderPaidEvent event = orderDomainService.payOder(order);
+        OrderPaidEvent event = orderDomainService.payOder(order, orderPaidEventDomainEventPublisher);
 
         // Then
         assertNotNull(event);
@@ -135,7 +149,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.payOder(order);
+            orderDomainService.payOder(order, orderPaidEventDomainEventPublisher);
         });
 
         // Then
@@ -183,7 +197,7 @@ class OrderDomainServiceImplTest {
                 .build();
 
         // When
-        OrderCancelledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
+        OrderCancelledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"), orderCancelledEventDomainEventPublisher);
 
         // Then
         assertNotNull(event);
@@ -200,7 +214,7 @@ class OrderDomainServiceImplTest {
 
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
+            orderDomainService.cancelOrderPayment(order, List.of("Payment failed"), orderCancelledEventDomainEventPublisher);
         });
 
         // Then

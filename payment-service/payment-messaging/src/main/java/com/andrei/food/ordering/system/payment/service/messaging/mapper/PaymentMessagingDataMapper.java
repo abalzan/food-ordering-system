@@ -3,6 +3,7 @@ package com.andrei.food.ordering.system.payment.service.messaging.mapper;
 import com.andrei.food.ordering.system.domain.event.PaymentCancelledEvent;
 import com.andrei.food.ordering.system.domain.event.PaymentCompletedEvent;
 import com.andrei.food.ordering.system.domain.event.PaymentFailedEvent;
+import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentResponseAvroModel;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentStatus;
 import com.andrei.food.ordering.system.payment.service.domain.dto.PaymentRequest;
@@ -56,7 +57,7 @@ public class PaymentMessagingDataMapper {
                 .build();
     }
 
-    public PaymentRequest paymentRequestAvroModelToPaymentRequest(PaymentResponseAvroModel paymentResponseAvroModel) {
+    public PaymentRequest paymentRequestAvroModelToPaymentRequest(PaymentRequestAvroModel paymentResponseAvroModel) {
         return PaymentRequest.builder()
                 .id(paymentResponseAvroModel.getId().toString())
                 .sagaId(paymentResponseAvroModel.getSagaId().toString())
@@ -64,7 +65,7 @@ public class PaymentMessagingDataMapper {
                 .orderId(paymentResponseAvroModel.getOrderId().toString())
                 .price(paymentResponseAvroModel.getPrice())
                 .createdAt(paymentResponseAvroModel.getCreatedAt())
-                .paymentOrderStatus(PaymentOrderStatus.valueOf(paymentResponseAvroModel.getPaymentStatus().name()))
+                .paymentOrderStatus(PaymentOrderStatus.valueOf(paymentResponseAvroModel.getPaymentOrderStatus().name()))
                 .build();
     }
 }

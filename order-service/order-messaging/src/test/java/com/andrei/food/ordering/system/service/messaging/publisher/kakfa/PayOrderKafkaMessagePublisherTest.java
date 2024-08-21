@@ -1,5 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.publisher.kakfa;
 
+import com.andrei.food.ordering.system.kafka.producer.KafkaMessageHelper;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.service.valueobject.OrderId;
@@ -25,7 +26,7 @@ class PayOrderKafkaMessagePublisherTest {
     @Mock
     private KafkaProducer<String, RestaurantApprovalRequestAvroModel> kafkaProducer;
     @Mock
-    private OrderKafkaMessageHelper orderKafkaMessageHelper;
+    private KafkaMessageHelper orderKafkaMessageHelper;
     @Mock
     private OrderPaidEvent orderPaidEvent;
     @Mock

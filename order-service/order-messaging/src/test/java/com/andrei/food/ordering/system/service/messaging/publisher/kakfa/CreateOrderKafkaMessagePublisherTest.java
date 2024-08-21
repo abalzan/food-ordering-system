@@ -1,5 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.publisher.kakfa;
 
+import com.andrei.food.ordering.system.kafka.producer.KafkaMessageHelper;
 import com.andrei.food.ordering.system.service.domain.config.OrderServiceConfigData;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
@@ -23,7 +24,7 @@ class CreateOrderKafkaMessagePublisherTest {
     @Mock
     private OrderServiceConfigData orderServiceConfigData;
     @Mock
-    private OrderKafkaMessageHelper orderKafkaMessageHelper;
+    private KafkaMessageHelper orderKafkaMessageHelper;
     @Mock
     private KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer;
     @Mock

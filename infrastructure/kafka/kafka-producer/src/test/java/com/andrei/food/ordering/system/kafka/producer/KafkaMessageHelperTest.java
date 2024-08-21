@@ -1,4 +1,4 @@
-package com.andrei.food.ordering.system.service.messaging.publisher.kakfa;
+package com.andrei.food.ordering.system.kafka.producer;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,19 +12,19 @@ import java.util.function.BiConsumer;
 
 import static org.mockito.Mockito.*;
 
-class OrderKafkaMessageHelperTest {
+class KafkaMessageHelperTest {
 
     @Mock
     private SendResult<String, String> sendResult;
     @Mock
     private RecordMetadata recordMetadata;
 
-    private OrderKafkaMessageHelper orderKafkaMessageHelper;
+    private KafkaMessageHelper orderKafkaMessageHelper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderKafkaMessageHelper = new OrderKafkaMessageHelper();
+        orderKafkaMessageHelper = new KafkaMessageHelper();
     }
 
     @Test

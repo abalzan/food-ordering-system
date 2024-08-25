@@ -6,6 +6,7 @@ import com.andrei.food.ordering.system.service.valueobject.Money;
 import com.andrei.food.ordering.system.service.valueobject.OrderApprovalStatus;
 import com.andrei.food.ordering.system.service.valueobject.OrderStatus;
 import com.andrei.food.ordering.system.service.valueobject.RestaurantId;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class Restaurant extends AggregateRoot<RestaurantId> {
 
     private OrderApproval orderApproval;
+    @Setter
     private boolean active;
     private final OrderDetail orderDetail;
 
@@ -41,8 +43,6 @@ public class Restaurant extends AggregateRoot<RestaurantId> {
             .approvalStatus(orderApprovalStatus)
             .build();
     }
-
-
 
     private Restaurant(Builder builder) {
         setId(builder.restaurantId);

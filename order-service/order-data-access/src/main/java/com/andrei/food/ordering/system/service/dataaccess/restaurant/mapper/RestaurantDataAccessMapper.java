@@ -1,12 +1,12 @@
 package com.andrei.food.ordering.system.service.dataaccess.restaurant.mapper;
 
+import com.andrei.food.ordering.system.dataaccess.restaurant.entity.RestaurantEntity;
+import com.andrei.food.ordering.system.dataaccess.restaurant.exception.RestaurantDataAccessException;
 import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.valueobject.Money;
 import com.andrei.food.ordering.system.service.valueobject.ProductId;
 import com.andrei.food.ordering.system.service.valueobject.RestaurantId;
-import com.andrei.food.ordering.system.service.dataaccess.restaurant.entity.RestaurantEntity;
-import com.andrei.food.ordering.system.service.dataaccess.restaurant.exception.RestaurantDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

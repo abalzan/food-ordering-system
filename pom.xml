@@ -105,7 +105,12 @@
       <dependency>
         <groupId>com.andrei.food.ordering.system</groupId>
         <artifactId>common-application</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.andrei.food.ordering.system</groupId>
+        <artifactId>common-data-access</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.andrei.food.ordering.system</groupId>

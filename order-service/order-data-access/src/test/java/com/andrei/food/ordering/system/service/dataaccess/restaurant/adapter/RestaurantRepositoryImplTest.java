@@ -1,9 +1,9 @@
 package com.andrei.food.ordering.system.service.dataaccess.restaurant.adapter;
+import com.andrei.food.ordering.system.dataaccess.restaurant.entity.RestaurantEntity;
+import com.andrei.food.ordering.system.dataaccess.restaurant.repository.RestaurantJpaRepository;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.valueobject.RestaurantId;
-import com.andrei.food.ordering.system.service.dataaccess.restaurant.entity.RestaurantEntity;
 import com.andrei.food.ordering.system.service.dataaccess.restaurant.mapper.RestaurantDataAccessMapper;
-import com.andrei.food.ordering.system.service.dataaccess.restaurant.repository.RestaurantJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

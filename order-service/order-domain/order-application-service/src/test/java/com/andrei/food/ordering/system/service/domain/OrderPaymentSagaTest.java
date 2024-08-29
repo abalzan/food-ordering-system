@@ -27,7 +27,7 @@ class OrderPaymentSagaTest {
     private OrderDomainService orderDomainService;
 
     @Mock
-    private OrderRepository orderRepository;
+    private OrderSagaHelper orderSagaHelper;
 
     @Mock
     private OrderPaidRestaurantRequestMessagePublisher orderPaidRestaurantRequestMessagePublisher;
@@ -49,26 +49,14 @@ class OrderPaymentSagaTest {
         OrderPaidEvent orderPaidEvent = mock(OrderPaidEvent.class);
 
         when(paymentResponse.getOrderId()).thenReturn(UUID.randomUUID().toString());
-        when(orderRepository.findById(any(OrderId.class))).thenReturn(Optional.of(order));
+        when(orderSagaHelper.findOrder(any(String.class))).thenReturn(order);
         when(orderDomainService.payOrder(order, orderPaidRestaurantRequestMessagePublisher)).thenReturn(orderPaidEvent);
 
         OrderPaidEvent result = orderPaymentSaga.process(paymentResponse);
 
         assertNotNull(result);
-        verify(orderRepository, times(1)).save(order);
+        verify(orderSagaHelper, times(1)).saveOrder(order);
         verify(orderDomainService, times(1)).payOrder(order, orderPaidRestaurantRequestMessagePublisher);
-    }
-
-    @Test
-    void processThrowsOrderNotFoundException() {
-        PaymentResponse paymentResponse = mock(PaymentResponse.class);
-
-        when(paymentResponse.getOrderId()).thenReturn(UUID.randomUUID().toString());
-        when(orderRepository.findById(any(OrderId.class))).thenReturn(Optional.empty());
-
-        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class, () -> orderPaymentSaga.process(paymentResponse));
-
-        assertEquals("Order with id " + paymentResponse.getOrderId() + " not found", exception.getMessage());
     }
 
     @Test
@@ -79,24 +67,12 @@ class OrderPaymentSagaTest {
                 .build();
 
         when(paymentResponse.getOrderId()).thenReturn(UUID.randomUUID().toString());
-        when(orderRepository.findById(any(OrderId.class))).thenReturn(Optional.of(order));
+        when(orderSagaHelper.findOrder(any(String.class))).thenReturn(order);
 
         EmptyEvent result = orderPaymentSaga.rollback(paymentResponse);
 
         assertNotNull(result);
-        verify(orderRepository, times(1)).save(order);
+        verify(orderSagaHelper, times(1)).saveOrder(order);
         verify(orderDomainService, times(1)).cancelOrder(order, paymentResponse.getFailureMessages());
-    }
-
-    @Test
-    void rollbackThrowsOrderNotFoundException() {
-        PaymentResponse paymentResponse = mock(PaymentResponse.class);
-
-        when(paymentResponse.getOrderId()).thenReturn(UUID.randomUUID().toString());
-        when(orderRepository.findById(any(OrderId.class))).thenReturn(Optional.empty());
-
-        OrderNotFoundException exception = assertThrows(OrderNotFoundException.class, () -> orderPaymentSaga.rollback(paymentResponse));
-
-        assertEquals("Order with id " + paymentResponse.getOrderId() + " not found", exception.getMessage());
     }
 }

@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>kafka</module>
+        <module>saga</module>
     </modules>
 </project>

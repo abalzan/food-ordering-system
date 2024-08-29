@@ -37,7 +37,7 @@ class RestaurantRepositoryImplTest {
 
     @Test
     void shouldFindRestaurantInformation() {
-        Restaurant restaurant = Restaurant.Builder.builder().restaurantId(new RestaurantId(restaurantId)).build();
+        Restaurant restaurant = Restaurant.builder().restaurantId(new RestaurantId(restaurantId)).build();
         List<UUID> restaurantProducts = Arrays.asList(UUID.randomUUID());
         when(restaurantDataAccessMapper.restaurantToRestaurantProducts(restaurant)).thenReturn(restaurantProducts);
         when(restaurantJpaRepository.findByRestaurantIdAndProductIdIn(restaurant.getId().getValue(), restaurantProducts)).thenReturn(Optional.of(Arrays.asList(new RestaurantEntity())));
@@ -50,7 +50,7 @@ class RestaurantRepositoryImplTest {
 
     @Test
     void shouldReturnEmptyWhenRestaurantInformationNotFound() {
-        Restaurant restaurant = Restaurant.Builder.builder().restaurantId(new RestaurantId(restaurantId)).build();
+        Restaurant restaurant = Restaurant.builder().restaurantId(new RestaurantId(restaurantId)).build();
         List<UUID> restaurantProducts = Arrays.asList(UUID.randomUUID());
         when(restaurantDataAccessMapper.restaurantToRestaurantProducts(restaurant)).thenReturn(restaurantProducts);
         when(restaurantJpaRepository.findByRestaurantIdAndProductIdIn(restaurant.getId().getValue(), restaurantProducts)).thenReturn(Optional.empty());

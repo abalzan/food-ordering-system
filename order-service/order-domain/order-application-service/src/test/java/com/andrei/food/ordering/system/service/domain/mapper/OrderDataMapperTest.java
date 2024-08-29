@@ -67,7 +67,7 @@ class OrderDataMapperTest {
 
     @Test
     void shouldMapOrderToCreateOrderResponse() {
-        Order order = Order.Builder.builder()
+        Order order = Order.builder()
                 .trackingId(new TrackingId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.APPROVED)
                 .build();
@@ -81,7 +81,7 @@ class OrderDataMapperTest {
 
     @Test
     void shouldMapOrderToTrackOrderResponse() {
-        Order order = Order.Builder.builder()
+        Order order = Order.builder()
                 .trackingId(new TrackingId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.APPROVED)
                 .failureMessages(Arrays.asList("Failure 1", "Failure 2"))

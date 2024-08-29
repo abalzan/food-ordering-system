@@ -34,7 +34,7 @@ class OrderRepositoryImplTest {
 
     @Test
     void shouldSaveOrder() {
-        Order order = Order.Builder.builder().build();
+        Order order = Order.builder().build();
         when(orderDataAccessMapper.orderToOrderEntity(order)).thenReturn(new OrderEntity());
         when(orderJpaRepository.save(new OrderEntity())).thenReturn(new OrderEntity());
         when(orderDataAccessMapper.orderEntityToOrder(new OrderEntity())).thenReturn(order);
@@ -47,7 +47,7 @@ class OrderRepositoryImplTest {
     @Test
     void shouldFindByTrackingId() {
         TrackingId trackingId = new TrackingId(UUID.randomUUID());
-        Order order = Order.Builder.builder().build();
+        Order order = Order.builder().build();
         when(orderJpaRepository.findByTrackingId(trackingId.getValue())).thenReturn(Optional.of(new OrderEntity()));
         when(orderDataAccessMapper.orderEntityToOrder(new OrderEntity())).thenReturn(order);
 

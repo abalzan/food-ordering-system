@@ -49,7 +49,7 @@ class OrderDataAccessMapperTest {
         when(order.getTrackingId()).thenReturn(new TrackingId(trackingId));
         when(order.getDeliveryAddress()).thenReturn(new StreetAddress(streetAddressId, "Street", "City", "PostalCode"));
         when(order.getPrice()).thenReturn(new Money(new BigDecimal(100.0)));
-        when(order.getItems()).thenReturn(Arrays.asList(OrderItem.Builder.builder()
+        when(order.getItems()).thenReturn(Arrays.asList(OrderItem.builder()
                 .orderItemId(new OrderItemId(123L))
                 .product(new Product(new ProductId(UUID.randomUUID())))
                 .quantity(2)

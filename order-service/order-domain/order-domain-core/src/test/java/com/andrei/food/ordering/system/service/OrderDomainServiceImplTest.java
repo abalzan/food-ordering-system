@@ -39,10 +39,10 @@ class OrderDomainServiceImplTest {
         ProductId productId = new ProductId(UUID.randomUUID());
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Restaurant restaurant = Restaurant.Builder.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .products(List.of(new Product(productId, "product1", new Money(new BigDecimal("10.00")))))
                 .active(true).build();
-        Order order = Order.Builder.builder().items(List.of(OrderItem.Builder.builder()
+        Order order = Order.builder().items(List.of(OrderItem.builder()
                         .product(new Product(productId, "product1", new Money(new BigDecimal("10.00"))))
                         .price(new Money(new BigDecimal("10.00"))) //OrderItemPrice
                         .quantity(1)
@@ -63,11 +63,11 @@ class OrderDomainServiceImplTest {
         ProductId productId = new ProductId(UUID.randomUUID());
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Restaurant restaurant = Restaurant.Builder.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .restaurantId(new RestaurantId(UUID.randomUUID()))
                 .products(List.of(new Product(productId, "product1", new Money(new BigDecimal("10.00")))))
                 .active(false).build();
-        Order order = Order.Builder.builder().build();
+        Order order = Order.builder().build();
 
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
@@ -83,10 +83,10 @@ class OrderDomainServiceImplTest {
         ProductId productId = new ProductId(UUID.randomUUID());
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Restaurant restaurant = Restaurant.Builder.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .products(List.of(new Product(productId, "product1", new Money(new BigDecimal("10.00")))))
                 .active(true).build();
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID())).items(List.of(OrderItem.Builder.builder()
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID())).items(List.of(OrderItem.builder()
                         .product(new Product(productId, "product1", new Money(new BigDecimal("10.00"))))
                         .build()))
                 .build();
@@ -105,10 +105,10 @@ class OrderDomainServiceImplTest {
         ProductId productId = new ProductId(UUID.randomUUID());
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Restaurant restaurant = Restaurant.Builder.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .products(List.of(new Product(productId, "product1", new Money(new BigDecimal("10.00")))))
                 .active(true).build();
-        Order order = Order.Builder.builder().items(List.of(OrderItem.Builder.builder()
+        Order order = Order.builder().items(List.of(OrderItem.builder()
                         .product(new Product(productId, "product1", new Money(new BigDecimal("10.00"))))
                         .price(new Money(new BigDecimal("10.00"))) //OrderItemPrice
                         .quantity(0)
@@ -128,12 +128,12 @@ class OrderDomainServiceImplTest {
     void payOrderShouldReturnPaidEvent() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PENDING)
         .build();
 
         // When
-        OrderPaidEvent event = orderDomainService.payOder(order, orderPaidEventDomainEventPublisher);
+        OrderPaidEvent event = orderDomainService.payOrder(order, orderPaidEventDomainEventPublisher);
 
         // Then
         assertNotNull(event);
@@ -144,12 +144,12 @@ class OrderDomainServiceImplTest {
     void payOrderShouldThrowExceptionWhenOrderStatusIsNotPending() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PAID)
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.payOder(order, orderPaidEventDomainEventPublisher);
+            orderDomainService.payOrder(order, orderPaidEventDomainEventPublisher);
         });
 
         // Then
@@ -160,7 +160,7 @@ class OrderDomainServiceImplTest {
     void approveOrderShouldChangeOrderStatusToApproved() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PAID)
                 .build();
 
@@ -175,7 +175,7 @@ class OrderDomainServiceImplTest {
     void approveOrderShouldThrowExceptionWhenOrderStatusIsNotPending() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PENDING)
                 .build();
 
@@ -192,7 +192,7 @@ class OrderDomainServiceImplTest {
     void cancelOrderPaymentShouldReturnCanceledEventWhenOrderPaymentIsCancelled() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PAID)
                 .build();
 
@@ -208,7 +208,7 @@ class OrderDomainServiceImplTest {
     void cancelOrderPaymentShouldThrowExceptionWhenOrderStatusIsNotPaid() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PENDING)
                 .build();
 
@@ -224,7 +224,7 @@ class OrderDomainServiceImplTest {
     void cancelOrderShouldChangeOrderStatusToCancelled() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PENDING)
                 .build();
 
@@ -239,7 +239,7 @@ class OrderDomainServiceImplTest {
     void cancelOrderShouldThrowExceptionWhenOrderStatusIsCancelingOrPending() {
         OrderDomainServiceImpl orderDomainService = new OrderDomainServiceImpl();
         // Given
-        Order order = Order.Builder.builder().orderId(new OrderId(UUID.randomUUID()))
+        Order order = Order.builder().orderId(new OrderId(UUID.randomUUID()))
                 .orderStatus(OrderStatus.PAID)
                 .build();
 

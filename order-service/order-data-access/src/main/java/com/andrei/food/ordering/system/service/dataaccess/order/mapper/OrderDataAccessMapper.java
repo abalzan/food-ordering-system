@@ -36,7 +36,7 @@ public class OrderDataAccessMapper {
     }
 
     public Order orderEntityToOrder(OrderEntity orderEntity) {
-        return Order.Builder.builder()
+        return Order.builder()
                 .orderId(new OrderId(orderEntity.getId()))
                 .customerId(new CustomerId(orderEntity.getCustomerId()))
                 .restaurantId(new RestaurantId(orderEntity.getRestaurantId()))
@@ -51,7 +51,7 @@ public class OrderDataAccessMapper {
 
     private List<OrderItem> orderItemsEntitiesToOrderItems(List<OrderItemEntity> items) {
         return items.stream()
-                .map(orderItemEntity ->OrderItem.Builder.builder()
+                .map(orderItemEntity ->OrderItem.builder()
                         .orderItemId(new OrderItemId(orderItemEntity.getId()))
                         .product(new Product(new ProductId(orderItemEntity.getProductId())))
                         .quantity(orderItemEntity.getQuantity())

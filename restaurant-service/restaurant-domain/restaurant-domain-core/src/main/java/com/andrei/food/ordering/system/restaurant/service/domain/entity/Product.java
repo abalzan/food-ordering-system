@@ -16,7 +16,6 @@ public class Product extends BaseEntity<ProductId> {
         this.available = available;
     }
 
-
     private Product(Builder builder) {
         setId(builder.productId);
         name = builder.name;
@@ -28,8 +27,6 @@ public class Product extends BaseEntity<ProductId> {
     public static Builder builder() {
         return new Builder();
     }
-
-
 
     public String getName() {
         return name;
@@ -55,10 +52,6 @@ public class Product extends BaseEntity<ProductId> {
         private boolean available;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder productId(ProductId val) {

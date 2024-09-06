@@ -23,7 +23,8 @@ public class PaymentRequestKafkaListener implements KafkaConsumer<PaymentRequest
     private final PaymentRequestMessageListener paymentRequestMessageListener;
     private final PaymentMessagingDataMapper paymentMessagingDataMapper;
 
-    @KafkaListener(id="${kafka-consumer-config.payment-consumer-group-id}",
+    @KafkaListener(groupId="${kafka-consumer-config.payment-consumer-group-id}",
+            id = "${kafka-consumer-config.payment-consumer-group-id}",
             topics = "${payment-service.payment-request-topic-name}")
     @Override
     public void receive(@Payload List<PaymentRequestAvroModel> messages,

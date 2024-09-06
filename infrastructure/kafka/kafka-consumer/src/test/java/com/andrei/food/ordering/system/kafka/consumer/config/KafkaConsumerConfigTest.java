@@ -41,6 +41,7 @@ class KafkaConsumerConfigTest {
         when(kafkaConfigData.getSchemaRegistryUrlKey()).thenReturn("schema.registry.url");
         when(kafkaConfigData.getSchemaRegistryUrl()).thenReturn("http://localhost:8081");
         when(kafkaConsumerConfigData.getSpecificAvroReader()).thenReturn("true");
+        when(kafkaConsumerConfigData.getSpecificAvroReaderKey()).thenReturn("specific.avro.reader");
         when(kafkaConsumerConfigData.getSessionTimeoutMs()).thenReturn(15000);
         when(kafkaConsumerConfigData.getHeartbeatIntervalMs()).thenReturn(3000);
         when(kafkaConsumerConfigData.getMaxPollIntervalMs()).thenReturn(300000);

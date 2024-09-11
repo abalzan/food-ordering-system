@@ -1,2 +1,5 @@
-INSERT INTO customer.customers (id, username, first_name, last_name) VALUES ('1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4b1e', 'johndoe', 'John', 'Doe');
-INSERT INTO customer.customers (id, username, first_name, last_name) VALUES ('d215b5f8-0249-4dc5-89a3-51fd148cfb41', 'janedoe', 'Jane', 'Doe');
+INSERT INTO customer.customers(id, username, first_name, last_name)
+VALUES ('d215b5f8-0249-4dc5-89a3-51fd148cfb41', 'user_1', 'First', 'User');
+
+INSERT INTO customer.customers(id, username, first_name, last_name)
+VALUES ('d215b5f8-0249-4dc5-89a3-51fd148cfb42', 'user_2', 'Second', 'User');

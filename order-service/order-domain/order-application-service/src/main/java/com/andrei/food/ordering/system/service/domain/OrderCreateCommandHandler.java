@@ -3,7 +3,6 @@ package com.andrei.food.ordering.system.service.domain;
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
 import com.andrei.food.ordering.system.service.domain.mapper.OrderDataMapper;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

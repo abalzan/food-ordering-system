@@ -1,8 +1,5 @@
 package com.andrei.food.ordering.system.service.domain;
 
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.CustomerRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.RestaurantRepository;

@@ -2,12 +2,9 @@ package com.andrei.food.ordering.system.service.domain;
 
 import com.andrei.food.ordering.system.service.OrderDomainService;
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
-import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.service.events.EmptyEvent;
-import com.andrei.food.ordering.system.service.exception.OrderNotFoundException;
 import com.andrei.food.ordering.system.service.valueobject.OrderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;

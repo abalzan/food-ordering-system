@@ -2,7 +2,6 @@ package com.andrei.food.ordering.system.service.domain;
 
 import com.andrei.food.ordering.system.service.OrderDomainService;
 import com.andrei.food.ordering.system.service.domain.dto.message.RestaurantApprovalResponse;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.service.events.EmptyEvent;

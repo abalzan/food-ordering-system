@@ -2,10 +2,10 @@ package com.andrei.food.ordering.system.service.messaging.publisher.kakfa;
 
 import com.andrei.food.ordering.system.kafka.producer.KafkaMessageHelper;
 import com.andrei.food.ordering.system.service.domain.config.OrderServiceConfigData;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import com.andrei.food.ordering.system.kafka.producer.service.KafkaProducer;
+import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class CreateOrderKafkaMessagePublisher implements OrderCreatedPaymentRequestMessagePublisher {
+public class CreateOrderKafkaMessagePublisher implements DomainEventPublisher<OrderCreatedEvent> {
 
     private final OrderMessagingDataMapper orderMessagingDataMapper;
     private final OrderServiceConfigData orderServiceConfigData;

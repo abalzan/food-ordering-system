@@ -2,7 +2,6 @@ package com.andrei.food.ordering.system.service.domain;
 
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
 import com.andrei.food.ordering.system.service.domain.mapper.OrderDataMapper;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.CustomerRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.RestaurantRepository;

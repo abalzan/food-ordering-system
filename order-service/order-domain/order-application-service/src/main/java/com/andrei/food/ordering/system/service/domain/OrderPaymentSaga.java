@@ -3,19 +3,13 @@ package com.andrei.food.ordering.system.service.domain;
 import com.andrei.food.ordering.system.SagaStep;
 import com.andrei.food.ordering.system.service.OrderDomainService;
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
-import com.andrei.food.ordering.system.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
-import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.service.events.EmptyEvent;
-import com.andrei.food.ordering.system.service.exception.OrderNotFoundException;
-import com.andrei.food.ordering.system.service.valueobject.OrderId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor

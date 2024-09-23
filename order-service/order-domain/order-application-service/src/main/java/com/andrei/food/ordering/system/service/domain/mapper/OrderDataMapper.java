@@ -5,9 +5,11 @@ import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResp
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderAddress;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderItem;
 import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
+import com.andrei.food.ordering.system.service.domain.outbox.model.payment.OrderPaymentEventPayload;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
+import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.service.valueobject.*;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +53,17 @@ public class OrderDataMapper {
                 .failureMessages(order.getFailureMessages())
                 .build();
     }
+
+    public OrderPaymentEventPayload orderCreatedEventToOrderPaymentEventPayload(OrderCreatedEvent orderCreatedEvent) {
+        return OrderPaymentEventPayload.builder()
+                .customerId(orderCreatedEvent.getOrder().getCustomerId().getValue().toString())
+                .orderId(orderCreatedEvent.getOrder().getId().getValue().toString())
+                .price(orderCreatedEvent.getOrder().getPrice().getAmount())
+                .createdAt(orderCreatedEvent.getCreatedAt())
+                .paymentOrderStatus(PaymentOrderStatus.PENDING.name())
+                .build();
+    }
+
 
     private List<com.andrei.food.ordering.system.service.entity.OrderItem> orderItemsToOrderItemsEntities(List<OrderItem> orderItems) {
         return orderItems.stream().map(orderItem -> com.andrei.food.ordering.system.service.entity.OrderItem.builder()

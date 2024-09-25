@@ -5,11 +5,14 @@ import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResp
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderAddress;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderItem;
 import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
+import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventPayload;
+import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventProduct;
 import com.andrei.food.ordering.system.service.domain.outbox.model.payment.OrderPaymentEventPayload;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
+import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.service.valueobject.*;
 import org.springframework.stereotype.Component;
 
@@ -61,6 +64,21 @@ public class OrderDataMapper {
                 .price(orderCreatedEvent.getOrder().getPrice().getAmount())
                 .createdAt(orderCreatedEvent.getCreatedAt())
                 .paymentOrderStatus(PaymentOrderStatus.PENDING.name())
+                .build();
+    }
+
+    public OrderApprovalEventPayload orderPaidEventToOrderApprovalEventPayload(OrderPaidEvent orderPaidEvent) {
+        return OrderApprovalEventPayload.builder()
+                .orderId(orderPaidEvent.getOrder().getId().getValue().toString())
+                .restaurantId(orderPaidEvent.getOrder().getRestaurantId().getValue().toString())
+                .restaurantOrderStatus(RestaurantOrderStatus.PAID.name())
+                .products(orderPaidEvent.getOrder().getItems().stream().map(orderItem ->
+                        OrderApprovalEventProduct.builder()
+                                .id(orderItem.getProduct().getId().getValue().toString())
+                                .quantity(orderItem.getQuantity())
+                                .build()).collect(Collectors.toList()))
+                .price(orderPaidEvent.getOrder().getPrice().getAmount())
+                .createdAt(orderPaidEvent.getCreatedAt())
                 .build();
     }
 

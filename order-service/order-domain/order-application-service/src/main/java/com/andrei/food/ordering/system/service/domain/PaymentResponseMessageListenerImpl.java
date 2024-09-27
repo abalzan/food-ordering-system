@@ -3,8 +3,6 @@ package com.andrei.food.ordering.system.service.domain;
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
 import com.andrei.food.ordering.system.service.domain.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import com.andrei.food.ordering.system.service.entity.Order;
-import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
-import com.andrei.food.ordering.system.service.events.EmptyEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

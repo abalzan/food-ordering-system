@@ -11,8 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,12 +26,9 @@ public class RestaurantApprovalOutboxScheduler implements OutboxScheduler {
     @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
             initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
     public void processOutboxMessage() {
-        Optional<List<OrderApprovalOutboxMessage>> outboxMessagesResponse = approvalOutboxHelper.getApprovalOutboxMessageByOutboxStatusAndSagaStatus(
+        approvalOutboxHelper.getApprovalOutboxMessageByOutboxStatusAndSagaStatus(
                 OutboxStatus.STARTED,
-                SagaStatus.PROCESSING);
-
-        if(outboxMessagesResponse.isPresent() && !outboxMessagesResponse.get().isEmpty()) {
-            List<OrderApprovalOutboxMessage> outboxMessages = outboxMessagesResponse.get();
+                SagaStatus.PROCESSING).ifPresent( outboxMessages -> {
             log.info("Received {} OrderApprovalOutboxMessage with ids {}", outboxMessages.size(),
                     outboxMessages.stream().map(outboxMessage -> outboxMessage.getId().toString()).collect(Collectors.joining(", ")));
 
@@ -42,7 +37,7 @@ public class RestaurantApprovalOutboxScheduler implements OutboxScheduler {
                 restaurantApprovalRequestMessagePublisher.publish(outboxMessage, this::updateOutboxStatus);
             });
             log.info("Processed {} OrderApprovalOutboxMessage sent to message bus", outboxMessages.size());
-        }
+        });
     }
 
     private void updateOutboxStatus(OrderApprovalOutboxMessage orderApprovalOutboxMessage, OutboxStatus outboxStatus) {

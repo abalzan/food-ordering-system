@@ -11,6 +11,7 @@ import com.andrei.food.ordering.system.service.domain.outbox.model.payment.Order
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
+import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import com.andrei.food.ordering.system.service.valueobject.*;
@@ -64,6 +65,16 @@ public class OrderDataMapper {
                 .price(orderCreatedEvent.getOrder().getPrice().getAmount())
                 .createdAt(orderCreatedEvent.getCreatedAt())
                 .paymentOrderStatus(PaymentOrderStatus.PENDING.name())
+                .build();
+    }
+
+    public OrderPaymentEventPayload orderCancelledEventToOrderPaymentEventPayload(OrderCancelledEvent orderCancelledEvent) {
+        return OrderPaymentEventPayload.builder()
+                .customerId(orderCancelledEvent.getOrder().getCustomerId().getValue().toString())
+                .orderId(orderCancelledEvent.getOrder().getId().getValue().toString())
+                .price(orderCancelledEvent.getOrder().getPrice().getAmount())
+                .createdAt(orderCancelledEvent.getCreatedAt())
+                .paymentOrderStatus(PaymentOrderStatus.CANCELLED.name())
                 .build();
     }
 

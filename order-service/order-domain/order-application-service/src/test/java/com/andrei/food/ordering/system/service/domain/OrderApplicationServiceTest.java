@@ -1,13 +1,19 @@
 package com.andrei.food.ordering.system.service.domain;
 
+import com.andrei.food.ordering.system.SagaStatus;
+import com.andrei.food.ordering.system.order.SagaConstants;
+import com.andrei.food.ordering.system.outbox.OutboxStatus;
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderAddress;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderItem;
 import com.andrei.food.ordering.system.service.domain.mapper.OrderDataMapper;
+import com.andrei.food.ordering.system.service.domain.outbox.model.payment.OrderPaymentEventPayload;
+import com.andrei.food.ordering.system.service.domain.outbox.model.payment.OrderPaymentOutboxMessage;
 import com.andrei.food.ordering.system.service.domain.ports.input.service.OrderApplicationService;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.CustomerRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
+import com.andrei.food.ordering.system.service.domain.ports.output.repository.PaymentOutboxRepository;
 import com.andrei.food.ordering.system.service.domain.ports.output.repository.RestaurantRepository;
 import com.andrei.food.ordering.system.service.entity.Customer;
 import com.andrei.food.ordering.system.service.entity.Order;
@@ -15,6 +21,8 @@ import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.exception.OrderDomainException;
 import com.andrei.food.ordering.system.service.valueobject.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -22,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,6 +53,11 @@ class OrderApplicationServiceTest {
     private CustomerRepository customerRepository;
     @Autowired
     private RestaurantRepository restaurantRepository;
+    @Autowired
+    private PaymentOutboxRepository paymentOutboxRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
+
 
     private CreateOrderCommand createOrderCommand;
     private CreateOrderCommand createOrderCommandWrongPrice;
@@ -52,6 +66,7 @@ class OrderApplicationServiceTest {
     private final UUID RESTAURANT_ID = UUID.fromString("f5f4b3b7-4b1b-4b7b-8b3b-7b4b3b7b4b4c");
     private final UUID PRODUCT_ID = UUID.fromString("f5f4b3b7-4b1b-4b7b-8b3b-7b4b3b7b4b5d");
     private final UUID ORDER_ID = UUID.fromString("f5f4b3b7-4b1b-4b7b-8b3b-7b4b3b7b4b6e");
+    private final UUID SAGA_ID = UUID.fromString("f5f4b3b7-4b1b-4b7b-8b3b-7b4b3b7b4b7d");
     private final BigDecimal PRICE = new BigDecimal("200.00");
 
     @BeforeAll
@@ -141,6 +156,7 @@ class OrderApplicationServiceTest {
         when(restaurantRepository.findRestaurantInformation(orderDataMapper.createOrderCommandToRestaurant(createOrderCommand)))
                 .thenReturn(Optional.of(restaurantResponse));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
+        when(paymentOutboxRepository.save(any(OrderPaymentOutboxMessage.class))).thenReturn(getOrderPaymentOutboxMessage());
     }
 
     @Test
@@ -176,5 +192,35 @@ class OrderApplicationServiceTest {
 
         OrderDomainException orderDomainException = assertThrows(OrderDomainException.class, () -> orderApplicationService.createOrder(createOrderCommand));
         assertEquals(orderDomainException.getMessage(), "Restaurant with id "+RESTAURANT_ID+" is currently not active");
+    }
+
+    private OrderPaymentOutboxMessage getOrderPaymentOutboxMessage() {
+        OrderPaymentEventPayload orderPaymentEventPayload = OrderPaymentEventPayload.builder()
+                .customerId(CUSTOMER_ID.toString())
+                .orderId(ORDER_ID.toString())
+                .price(PRICE)
+                .createdAt(ZonedDateTime.now())
+                .paymentOrderStatus(PaymentOrderStatus.PENDING.name())
+                .build();
+
+        return OrderPaymentOutboxMessage.builder()
+                .id(UUID.randomUUID())
+                .sagaId(SAGA_ID)
+                .createdAt(ZonedDateTime.now())
+                .type(SagaConstants.ORDER_SAGA_NAME)
+                .payload(createPayload(orderPaymentEventPayload))
+                .orderStatus(OrderStatus.PENDING)
+                .sagaStatus(SagaStatus.STARTED)
+                .outboxStatus(OutboxStatus.STARTED)
+                .version(0)
+                .build();
+    }
+
+    private String createPayload(OrderPaymentEventPayload orderPaymentEventPayload) {
+        try {
+            return objectMapper.writeValueAsString(orderPaymentEventPayload);
+        } catch (JsonProcessingException e) {
+            throw new OrderDomainException("Failed to serialize OrderPaymentEventPayload with id " + orderPaymentEventPayload.getOrderId(), e);
+        }
     }
 }

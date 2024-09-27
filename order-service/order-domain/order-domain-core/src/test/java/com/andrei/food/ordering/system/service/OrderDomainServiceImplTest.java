@@ -51,7 +51,7 @@ class OrderDomainServiceImplTest {
                 .price(new Money(new BigDecimal("10.00"))) //OrderPrice
                 .build();
         // When
-        OrderCreatedEvent event = orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
+        OrderCreatedEvent event = orderDomainService.validateAndInitiateOrder(order, restaurant);
 
         // Then
         assertNotNull(event);
@@ -71,7 +71,7 @@ class OrderDomainServiceImplTest {
 
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
+            orderDomainService.validateAndInitiateOrder(order, restaurant);
         });
 
         // Then
@@ -92,7 +92,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
+            orderDomainService.validateAndInitiateOrder(order, restaurant);
         });
 
         // Then
@@ -117,7 +117,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
+            orderDomainService.validateAndInitiateOrder(order, restaurant);
         });
 
         // Then
@@ -133,7 +133,7 @@ class OrderDomainServiceImplTest {
         .build();
 
         // When
-        OrderPaidEvent event = orderDomainService.payOrder(order, orderPaidEventDomainEventPublisher);
+        OrderPaidEvent event = orderDomainService.payOrder(order);
 
         // Then
         assertNotNull(event);
@@ -149,7 +149,7 @@ class OrderDomainServiceImplTest {
                 .build();
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.payOrder(order, orderPaidEventDomainEventPublisher);
+            orderDomainService.payOrder(order);
         });
 
         // Then
@@ -197,7 +197,7 @@ class OrderDomainServiceImplTest {
                 .build();
 
         // When
-        OrderCancelledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"), orderCancelledEventDomainEventPublisher);
+        OrderCancelledEvent event = orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
 
         // Then
         assertNotNull(event);
@@ -214,7 +214,7 @@ class OrderDomainServiceImplTest {
 
         // When
         Exception exception = assertThrows(OrderDomainException.class, () -> {
-            orderDomainService.cancelOrderPayment(order, List.of("Payment failed"), orderCancelledEventDomainEventPublisher);
+            orderDomainService.cancelOrderPayment(order, List.of("Payment failed"));
         });
 
         // Then

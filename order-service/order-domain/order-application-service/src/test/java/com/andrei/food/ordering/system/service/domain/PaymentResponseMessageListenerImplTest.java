@@ -1,7 +1,6 @@
 package com.andrei.food.ordering.system.service.domain;
 
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
-import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,14 +26,10 @@ class PaymentResponseMessageListenerImplTest {
     @Test
     void paymentCompletedPublishesOrderPaidEvent() {
         PaymentResponse paymentResponse = mock(PaymentResponse.class);
-        OrderPaidEvent orderPaidEvent = mock(OrderPaidEvent.class);
-
-        when(orderPaymentSaga.process(paymentResponse)).thenReturn(orderPaidEvent);
 
         paymentResponseMessageListenerImpl.paymentCompleted(paymentResponse);
 
         verify(orderPaymentSaga, times(1)).process(paymentResponse);
-        verify(orderPaidEvent, times(1)).fire();
     }
 
     @Test

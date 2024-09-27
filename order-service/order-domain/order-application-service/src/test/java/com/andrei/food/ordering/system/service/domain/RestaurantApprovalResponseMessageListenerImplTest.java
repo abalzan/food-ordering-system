@@ -1,7 +1,6 @@
 package com.andrei.food.ordering.system.service.domain;
 
 import com.andrei.food.ordering.system.service.domain.dto.message.RestaurantApprovalResponse;
-import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -41,14 +40,10 @@ class RestaurantApprovalResponseMessageListenerImplTest {
     @Test
     void orderRejectedRollsBackSuccessfully() {
         RestaurantApprovalResponse restaurantApprovalResponse = mock(RestaurantApprovalResponse.class);
-        OrderCancelledEvent orderCancelledEvent = mock(OrderCancelledEvent.class);
-
-        when(orderApprovalSaga.rollback(restaurantApprovalResponse)).thenReturn(orderCancelledEvent);
 
         restaurantApprovalResponseMessageListenerImpl.orderRejected(restaurantApprovalResponse);
 
         verify(orderApprovalSaga, times(1)).rollback(restaurantApprovalResponse);
-        verify(orderCancelledEvent, times(1)).fire();
     }
 
     @Test

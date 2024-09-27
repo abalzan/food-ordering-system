@@ -79,4 +79,5 @@ public class ApprovalOutboxHelper {
             throw new OrderDomainException("Failed to serialize OrderApprovalEventPayload with id " + orderApprovalEventPayload.getOrderId(), e);
         }
     }
+
 }

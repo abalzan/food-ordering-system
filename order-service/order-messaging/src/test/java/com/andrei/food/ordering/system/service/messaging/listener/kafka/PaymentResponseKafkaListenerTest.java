@@ -3,6 +3,7 @@ package com.andrei.food.ordering.system.service.messaging.listener.kafka;
 import com.andrei.food.ordering.system.service.domain.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentResponseAvroModel;
 import com.andrei.food.ordering.system.kafka.order.avro.model.PaymentStatus;
+import com.andrei.food.ordering.system.service.exception.OrderNotFoundException;
 import com.andrei.food.ordering.system.service.messaging.mapper.OrderMessagingDataMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,6 +26,7 @@ class PaymentResponseKafkaListenerTest {
 
     @Mock
     private PaymentResponseMessageListener paymentResponseMessageListener;
+
     @Mock
     private OrderMessagingDataMapper orderMessagingDataMapper;
 
@@ -51,8 +54,8 @@ class PaymentResponseKafkaListenerTest {
     }
 
     @Test
-    @DisplayName("Should process completed payment responses correctly")
-    void shouldProcessCompletedPaymentResponsesCorrectly() {
+    @DisplayName("Processes completed payment responses correctly")
+    void processesCompletedPaymentResponsesCorrectly() {
         List<PaymentResponseAvroModel> messages = Collections.singletonList(completedPaymentResponse);
 
         paymentResponseKafkaListener.receive(messages, Collections.singletonList("key"), Collections.singletonList(0), Collections.singletonList(0L));
@@ -62,8 +65,8 @@ class PaymentResponseKafkaListenerTest {
     }
 
     @Test
-    @DisplayName("Should process failed payment responses correctly")
-    void shouldProcessFailedPaymentResponsesCorrectly() {
+    @DisplayName("Processes failed payment responses correctly")
+    void processesFailedPaymentResponsesCorrectly() {
         List<PaymentResponseAvroModel> messages = Collections.singletonList(failedPaymentResponse);
 
         paymentResponseKafkaListener.receive(messages, Collections.singletonList("key"), Collections.singletonList(0), Collections.singletonList(0L));
@@ -73,13 +76,39 @@ class PaymentResponseKafkaListenerTest {
     }
 
     @Test
-    @DisplayName("Should process cancelled payment responses correctly")
-    void shouldProcessCancelledPaymentResponsesCorrectly() {
+    @DisplayName("Processes cancelled payment responses correctly")
+    void processesCancelledPaymentResponsesCorrectly() {
         List<PaymentResponseAvroModel> messages = Collections.singletonList(cancelledPaymentResponse);
 
         paymentResponseKafkaListener.receive(messages, Collections.singletonList("key"), Collections.singletonList(0), Collections.singletonList(0L));
 
         verify(paymentResponseMessageListener, never()).paymentCompleted(any());
         verify(paymentResponseMessageListener, times(1)).paymentCancelled(any());
+    }
+
+    @Test
+    @DisplayName("Logs and ignores OptimisticLockingFailureException")
+    void logsAndIgnoresOptimisticLockingFailureException() {
+        doThrow(new OptimisticLockingFailureException("Optimistic lock exception"))
+                .when(paymentResponseMessageListener).paymentCompleted(any());
+
+        List<PaymentResponseAvroModel> messages = Collections.singletonList(completedPaymentResponse);
+
+        paymentResponseKafkaListener.receive(messages, Collections.singletonList("key"), Collections.singletonList(0), Collections.singletonList(0L));
+
+        verify(paymentResponseMessageListener, times(1)).paymentCompleted(any());
+    }
+
+    @Test
+    @DisplayName("Logs and handles OrderNotFoundException")
+    void logsAndHandlesOrderNotFoundException() {
+        doThrow(new OrderNotFoundException("Order not found"))
+                .when(paymentResponseMessageListener).paymentCompleted(any());
+
+        List<PaymentResponseAvroModel> messages = Collections.singletonList(completedPaymentResponse);
+
+        paymentResponseKafkaListener.receive(messages, Collections.singletonList("key"), Collections.singletonList(0), Collections.singletonList(0L));
+
+        verify(paymentResponseMessageListener, times(1)).paymentCompleted(any());
     }
 }

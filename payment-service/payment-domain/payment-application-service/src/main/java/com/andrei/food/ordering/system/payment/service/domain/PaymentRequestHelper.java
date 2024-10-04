@@ -8,9 +8,6 @@ import com.andrei.food.ordering.system.domain.event.PaymentEvent;
 import com.andrei.food.ordering.system.payment.service.domain.dto.PaymentRequest;
 import com.andrei.food.ordering.system.payment.service.domain.exception.PaymentApplicationServiceException;
 import com.andrei.food.ordering.system.payment.service.domain.mapper.PaymentDataMapper;
-import com.andrei.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentCancelledMessagePublisher;
-import com.andrei.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentCompletedMessagePublisher;
-import com.andrei.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentFailedMessagePublisher;
 import com.andrei.food.ordering.system.payment.service.domain.ports.output.repository.CreditEntryRepository;
 import com.andrei.food.ordering.system.payment.service.domain.ports.output.repository.CreditHistoryRepository;
 import com.andrei.food.ordering.system.payment.service.domain.ports.output.repository.PaymentRepository;
@@ -34,25 +31,22 @@ public class PaymentRequestHelper {
     private final PaymentRepository paymentRepository;
     private final CreditEntryRepository creditEntryRepository;
     private final CreditHistoryRepository creditHistoryRepository;
-    private final PaymentCompletedMessagePublisher paymentCompletedEventDomainEventPublisher;
-    private final PaymentCancelledMessagePublisher paymentCancelledEventDomainEventPublisher;
-    private final PaymentFailedMessagePublisher paymentFailedEventDomainEventPublisher;
+
 
     @Transactional
-    public PaymentEvent persistPayment(PaymentRequest paymentRequest) {
+    public void persistPayment(PaymentRequest paymentRequest) {
         log.info("Received Payment complete event for order id {}", paymentRequest.getOrderId());
         Payment payment = paymentDataMapper.paymentRequestModelToPayment(paymentRequest);
         CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
         List<CreditHistory> creditHistories = getCreditHistories(payment.getCustomerId());
         List<String> failureMessages = new ArrayList<>();
         PaymentEvent paymentEvent = paymentDomainService.validateAndInitiatePayment(payment, creditEntry, creditHistories,
-                failureMessages, paymentCompletedEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+                failureMessages);
         persistDBObject(payment, failureMessages, creditEntry, creditHistories);
-        return paymentEvent;
     }
 
     @Transactional
-    public PaymentEvent persistCancelPayment(PaymentRequest paymentRequest) {
+    public void persistCancelPayment(PaymentRequest paymentRequest) {
        log.info("Received Payment cancel event for order id {}", paymentRequest.getOrderId());
         Payment payment = paymentRepository.findByOrderId(new OrderId(UUID.fromString(paymentRequest.getOrderId())))
                 .orElseThrow(() -> {
@@ -62,10 +56,8 @@ public class PaymentRequestHelper {
         CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
         List<CreditHistory> creditHistories = getCreditHistories(payment.getCustomerId());
         List<String> failureMessages = new ArrayList<>();
-        PaymentEvent paymentEvent = paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages, paymentCancelledEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+        PaymentEvent paymentEvent = paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages;
         persistDBObject(payment, failureMessages, creditEntry, creditHistories);
-
-        return paymentEvent;
     }
 
 

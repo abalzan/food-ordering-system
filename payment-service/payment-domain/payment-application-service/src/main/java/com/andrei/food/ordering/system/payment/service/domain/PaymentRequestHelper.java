@@ -5,6 +5,7 @@ import com.andrei.food.ordering.system.domain.entity.CreditEntry;
 import com.andrei.food.ordering.system.domain.entity.CreditHistory;
 import com.andrei.food.ordering.system.domain.entity.Payment;
 import com.andrei.food.ordering.system.domain.event.PaymentEvent;
+import com.andrei.food.ordering.system.domain.exception.PaymentNotFoundException;
 import com.andrei.food.ordering.system.payment.service.domain.dto.PaymentRequest;
 import com.andrei.food.ordering.system.payment.service.domain.exception.PaymentApplicationServiceException;
 import com.andrei.food.ordering.system.payment.service.domain.mapper.PaymentDataMapper;
@@ -51,7 +52,7 @@ public class PaymentRequestHelper {
         Payment payment = paymentRepository.findByOrderId(new OrderId(UUID.fromString(paymentRequest.getOrderId())))
                 .orElseThrow(() -> {
                     log.error("Could not found the payment for order id {}", paymentRequest.getOrderId());
-                    return new PaymentApplicationServiceException("Could not find the payment for order id " + paymentRequest.getOrderId());
+                    return new PaymentNotFoundException("Could not find the payment for order id " + paymentRequest.getOrderId());
                 });
         CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
         List<CreditHistory> creditHistories = getCreditHistories(payment.getCustomerId());

@@ -19,5 +19,6 @@ public interface PaymentDomainService {
                                             List<String> failureMessages);
     PaymentEvent validateAndCancelPayment(Payment payment,
                                           CreditEntry creditEntry,
-                                          List<CreditHistory> creditHistories);
+                                          List<CreditHistory> creditHistories,
+                                            List<String> failureMessages);
 }

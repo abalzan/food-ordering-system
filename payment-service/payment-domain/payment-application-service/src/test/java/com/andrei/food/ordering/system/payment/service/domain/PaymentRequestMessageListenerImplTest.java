@@ -3,18 +3,13 @@ package com.andrei.food.ordering.system.payment.service.domain;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.andrei.food.ordering.system.domain.entity.Payment;
-import com.andrei.food.ordering.system.domain.event.PaymentEvent;
-import com.andrei.food.ordering.system.domain.valueobject.PaymentId;
 import com.andrei.food.ordering.system.payment.service.domain.dto.PaymentRequest;
-import com.andrei.food.ordering.system.service.valueobject.OrderId;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.UUID;
 
 class PaymentRequestMessageListenerImplTest {
 
@@ -30,33 +25,31 @@ class PaymentRequestMessageListenerImplTest {
     }
 
     @Test
-    void completePaymentSuccessfully() {
+    @DisplayName("Completes payment with valid request")
+    void completesPaymentWithValidRequest() {
         PaymentRequest paymentRequest = PaymentRequest.builder().build();
-        PaymentEvent paymentEvent = mock(PaymentEvent.class);
-        Payment payment = mock(Payment.class);
-        PaymentId paymentId = mock(PaymentId.class);
-        OrderId orderId = mock(OrderId.class);
-        UUID paymentUUID = UUID.randomUUID();
-        UUID orderUUID = UUID.randomUUID();
-
-        when(paymentId.getValue()).thenReturn(paymentUUID);
-        when(orderId.getValue()).thenReturn(orderUUID);
-        when(payment.getId()).thenReturn(paymentId);
-        when(payment.getOrderId()).thenReturn(orderId);
-        when(paymentEvent.getPayment()).thenReturn(payment);
-        when(paymentRequestHelper.persistPayment(paymentRequest)).thenReturn(paymentEvent);
 
         paymentRequestMessageListener.completePayment(paymentRequest);
 
         verify(paymentRequestHelper).persistPayment(paymentRequest);
-        verify(paymentEvent).fire();
     }
 
     @Test
-    void completePaymentThrowsException() {
+    @DisplayName("Cancels payment with valid request")
+    void cancelsPaymentWithValidRequest() {
         PaymentRequest paymentRequest = PaymentRequest.builder().build();
 
-        when(paymentRequestHelper.persistPayment(paymentRequest)).thenThrow(new RuntimeException("Error"));
+        paymentRequestMessageListener.cancelPayment(paymentRequest);
+
+        verify(paymentRequestHelper).persistCancelPayment(paymentRequest);
+    }
+
+    @Test
+    @DisplayName("Handles exception during complete payment")
+    void handlesExceptionDuringCompletePayment() {
+        PaymentRequest paymentRequest = PaymentRequest.builder().build();
+
+        doThrow(new RuntimeException("Error")).when(paymentRequestHelper).persistPayment(paymentRequest);
 
         assertThrows(RuntimeException.class, () -> {
             paymentRequestMessageListener.completePayment(paymentRequest);
@@ -66,33 +59,11 @@ class PaymentRequestMessageListenerImplTest {
     }
 
     @Test
-    void cancelPaymentSuccessfully() {
-        PaymentRequest paymentRequest = PaymentRequest.builder().build();
-        PaymentEvent paymentEvent = mock(PaymentEvent.class);
-        Payment payment = mock(Payment.class);
-        PaymentId paymentId = mock(PaymentId.class);
-        OrderId orderId = mock(OrderId.class);
-        UUID paymentUUID = UUID.randomUUID();
-        UUID orderUUID = UUID.randomUUID();
-
-        when(paymentId.getValue()).thenReturn(paymentUUID);
-        when(orderId.getValue()).thenReturn(orderUUID);
-        when(payment.getId()).thenReturn(paymentId);
-        when(payment.getOrderId()).thenReturn(orderId);
-        when(paymentEvent.getPayment()).thenReturn(payment);
-        when(paymentRequestHelper.persistCancelPayment(paymentRequest)).thenReturn(paymentEvent);
-
-        paymentRequestMessageListener.cancelPayment(paymentRequest);
-
-        verify(paymentRequestHelper).persistCancelPayment(paymentRequest);
-        verify(paymentEvent).fire();
-    }
-
-    @Test
-    void cancelPaymentThrowsException() {
+    @DisplayName("Handles exception during cancel payment")
+    void handlesExceptionDuringCancelPayment() {
         PaymentRequest paymentRequest = PaymentRequest.builder().build();
 
-        when(paymentRequestHelper.persistCancelPayment(paymentRequest)).thenThrow(new RuntimeException("Error"));
+        doThrow(new RuntimeException("Error")).when(paymentRequestHelper).persistCancelPayment(paymentRequest);
 
         assertThrows(RuntimeException.class, () -> {
             paymentRequestMessageListener.cancelPayment(paymentRequest);

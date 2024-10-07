@@ -1,6 +1,5 @@
 package com.andrei.food.ordering.system.payment.service.domain;
 
-import com.andrei.food.ordering.system.domain.event.PaymentEvent;
 import com.andrei.food.ordering.system.payment.service.domain.dto.PaymentRequest;
 import com.andrei.food.ordering.system.payment.service.domain.ports.input.message.listener.PaymentRequestMessageListener;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ public class PaymentRequestMessageListenerImpl implements PaymentRequestMessageL
     @Override
     public void completePayment(PaymentRequest paymentRequest) {
         paymentRequestHelper.persistPayment(paymentRequest);
-
     }
 
     @Override

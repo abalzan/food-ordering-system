@@ -34,6 +34,7 @@ public class PaymentMessagingDataMapper {
                 .setSagaId(UUID.fromString(sagaId))
                 .setCustomerId(UUID.fromString(orderEventPayload.getCustomerId()))
                 .setOrderId(UUID.fromString(orderEventPayload.getOrderId()))
+                .setPaymentId(UUID.fromString(orderEventPayload.getPaymentId()))
                 .setPrice(orderEventPayload.getPrice())
                 .setCreatedAt(orderEventPayload.getCreatedAt().toInstant())
                 .setPaymentStatus(PaymentStatus.valueOf(orderEventPayload.getPaymentStatus()))

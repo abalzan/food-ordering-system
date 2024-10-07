@@ -27,7 +27,7 @@ public class OrderOutboxScheduler implements OutboxScheduler {
                 .ifPresent(orderOutboxMessages -> {
                     log.info("Received {} outbox messages with ids {}, sending them to the outbox publisher",
                             orderOutboxMessages.size(),
-                            orderOutboxMessages.stream().map(orderOutboxMessage -> orderOutboxMessage.getId().toString()).toList())
+                            orderOutboxMessages.stream().map(orderOutboxMessage -> orderOutboxMessage.getId().toString()).toList());
 
                     orderOutboxMessages.forEach(orderOutboxMessage ->
                             paymentResponseMessagePublisher.publish(orderOutboxMessage, orderOutboxHelper::updateOutboxMessage));

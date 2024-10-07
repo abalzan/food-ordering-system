@@ -13,11 +13,11 @@ import com.andrei.food.ordering.system.domain.valueobject.CreditEntryId;
 import com.andrei.food.ordering.system.domain.valueobject.CreditHistoryId;
 import com.andrei.food.ordering.system.domain.valueobject.PaymentId;
 import com.andrei.food.ordering.system.domain.valueobject.TransactionType;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.valueobject.CustomerId;
 import com.andrei.food.ordering.system.service.valueobject.Money;
 import com.andrei.food.ordering.system.service.valueobject.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -33,10 +33,6 @@ class PaymentDomainServiceImplTest {
     private List<CreditHistory> creditHistories;
     private List<String> failureMessages;
 
-    private DomainEventPublisher<PaymentCompletedEvent> paymentCompletedEventDomainEventPublisher;
-    private DomainEventPublisher<PaymentFailedEvent> paymentFailedEventDomainEventPublisher;
-    private DomainEventPublisher<PaymentCancelledEvent> paymentCancelledEventDomainEventPublisher;
-
     @BeforeEach
     void setUp() {
         paymentDomainService = new PaymentDomainServiceImpl();
@@ -44,17 +40,15 @@ class PaymentDomainServiceImplTest {
         creditEntry = mock(CreditEntry.class);
         creditHistories = new ArrayList<>();
         failureMessages = new ArrayList<>();
-        paymentCompletedEventDomainEventPublisher = mock(DomainEventPublisher.class);
-        paymentFailedEventDomainEventPublisher = mock(DomainEventPublisher.class);
-        paymentCancelledEventDomainEventPublisher = mock(DomainEventPublisher.class);
     }
 
     @Test
-    void validateAndInitiatePayment_SuccessfulPayment() {
+    @DisplayName("Initiates payment with exact credit amount")
+    void initiatesPaymentWithExactCreditAmount() {
         payment = Payment.builder()
                 .paymentId(new PaymentId(UUID.randomUUID()))
                 .customerId(new CustomerId(UUID.randomUUID()))
-                .price(new Money(new BigDecimal(100)))
+                .price(new Money(new BigDecimal(200)))
                 .build();
         creditEntry = CreditEntry.builder()
                 .creditEntryId(new CreditEntryId(UUID.randomUUID()))
@@ -68,7 +62,7 @@ class PaymentDomainServiceImplTest {
                 .amount(new Money(new BigDecimal(200)))
                 .build());
 
-        PaymentCompletedEvent event = (PaymentCompletedEvent) paymentDomainService.validateAndInitiatePayment(payment, creditEntry, creditHistories, failureMessages, paymentCompletedEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+        PaymentCompletedEvent event = (PaymentCompletedEvent) paymentDomainService.validateAndInitiatePayment(payment, creditEntry, creditHistories, failureMessages);
 
         assertTrue(failureMessages.isEmpty());
         assertEquals(PaymentStatus.COMPLETED, payment.getPaymentStatus());
@@ -76,7 +70,8 @@ class PaymentDomainServiceImplTest {
     }
 
     @Test
-    void validateAndInitiatePayment_InsufficientCredit() {
+    @DisplayName("Fails payment with insufficient credit history")
+    void failsPaymentWithInsufficientCreditHistory() {
         payment = Payment.builder()
                 .paymentId(new PaymentId(UUID.randomUUID()))
                 .customerId(new CustomerId(UUID.randomUUID()))
@@ -85,7 +80,7 @@ class PaymentDomainServiceImplTest {
         creditEntry = CreditEntry.builder()
                 .creditEntryId(new CreditEntryId(UUID.randomUUID()))
                 .customerId(payment.getCustomerId())
-                .totalCreditAmount(new Money(new BigDecimal(200)))
+                .totalCreditAmount(new Money(new BigDecimal(300)))
                 .build();
         creditHistories.add(CreditHistory.builder()
                 .creditHistoryId(new CreditHistoryId(UUID.randomUUID()))
@@ -94,7 +89,7 @@ class PaymentDomainServiceImplTest {
                 .amount(new Money(new BigDecimal(200)))
                 .build());
 
-        PaymentFailedEvent event = (PaymentFailedEvent) paymentDomainService.validateAndInitiatePayment(payment, creditEntry, creditHistories, failureMessages, paymentCompletedEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+        PaymentFailedEvent event = (PaymentFailedEvent) paymentDomainService.validateAndInitiatePayment(payment, creditEntry, creditHistories, failureMessages);
 
         assertFalse(failureMessages.isEmpty());
         assertEquals(PaymentStatus.FAILED, payment.getPaymentStatus());
@@ -102,14 +97,26 @@ class PaymentDomainServiceImplTest {
     }
 
     @Test
-    void validateAndCancelPayment_SuccessfulCancellation() {
+    @DisplayName("Cancels payment with sufficient credit history")
+    void cancelsPaymentWithSufficientCreditHistory() {
         payment = Payment.builder()
                 .paymentId(new PaymentId(UUID.randomUUID()))
                 .customerId(new CustomerId(UUID.randomUUID()))
                 .price(new Money(new BigDecimal(100)))
                 .build();
+        creditEntry = CreditEntry.builder()
+                .creditEntryId(new CreditEntryId(UUID.randomUUID()))
+                .customerId(payment.getCustomerId())
+                .totalCreditAmount(new Money(new BigDecimal(200)))
+                .build();
+        creditHistories.add(CreditHistory.builder()
+                .creditHistoryId(new CreditHistoryId(UUID.randomUUID()))
+                .customerId(creditEntry.getCustomerId())
+                .transactionType(TransactionType.DEBIT)
+                .amount(new Money(new BigDecimal(100)))
+                .build());
 
-        PaymentCancelledEvent event = (PaymentCancelledEvent) paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages, paymentCancelledEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+        PaymentCancelledEvent event = (PaymentCancelledEvent) paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages);
 
         assertTrue(failureMessages.isEmpty());
         assertEquals(PaymentStatus.CANCELLED, payment.getPaymentStatus());
@@ -117,7 +124,8 @@ class PaymentDomainServiceImplTest {
     }
 
     @Test
-    void validateAndCancelPayment_FailureDueToCreditHistoryMismatch() {
+    @DisplayName("Fails cancellation with mismatched credit history")
+    void failsCancellationWithMismatchedCreditHistory() {
         payment = Payment.builder()
                 .paymentId(new PaymentId(UUID.randomUUID()))
                 .customerId(new CustomerId(UUID.randomUUID()))
@@ -126,9 +134,8 @@ class PaymentDomainServiceImplTest {
         creditEntry = CreditEntry.builder()
                 .creditEntryId(new CreditEntryId(UUID.randomUUID()))
                 .customerId(payment.getCustomerId())
-                .totalCreditAmount(new Money(new BigDecimal(100)))
+                .totalCreditAmount(new Money(new BigDecimal(200)))
                 .build();
-
         creditHistories.add(CreditHistory.builder()
                 .creditHistoryId(new CreditHistoryId(UUID.randomUUID()))
                 .customerId(payment.getCustomerId())
@@ -136,7 +143,7 @@ class PaymentDomainServiceImplTest {
                 .amount(new Money(new BigDecimal(50)))
                 .build());
 
-        PaymentFailedEvent event = (PaymentFailedEvent) paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages, paymentCancelledEventDomainEventPublisher, paymentFailedEventDomainEventPublisher);
+        PaymentFailedEvent event = (PaymentFailedEvent) paymentDomainService.validateAndCancelPayment(payment, creditEntry, creditHistories, failureMessages);
 
         assertFalse(failureMessages.isEmpty());
         assertEquals(PaymentStatus.FAILED, payment.getPaymentStatus());

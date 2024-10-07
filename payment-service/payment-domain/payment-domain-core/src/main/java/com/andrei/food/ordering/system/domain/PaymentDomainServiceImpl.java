@@ -10,7 +10,6 @@ import com.andrei.food.ordering.system.domain.event.PaymentFailedEvent;
 import com.andrei.food.ordering.system.domain.valueobject.CreditHistoryId;
 import com.andrei.food.ordering.system.domain.valueobject.TransactionType;
 import com.andrei.food.ordering.system.service.DomainConstants;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.valueobject.Money;
 import com.andrei.food.ordering.system.service.valueobject.PaymentStatus;
 import lombok.extern.slf4j.Slf4j;

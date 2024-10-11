@@ -1,12 +1,14 @@
 package com.andrei.food.ordering.system.restaurant.service.domain;
 
+import com.andrei.food.ordering.system.outbox.OutboxStatus;
 import com.andrei.food.ordering.system.restaurant.service.domain.dto.RestaurantApprovalRequest;
 import com.andrei.food.ordering.system.restaurant.service.domain.entity.Restaurant;
 import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderApprovalEvent;
 import com.andrei.food.ordering.system.restaurant.service.domain.exception.RestaurantNotFoundException;
 import com.andrei.food.ordering.system.restaurant.service.domain.mapper.RestaurantDataMapper;
-import com.andrei.food.ordering.system.restaurant.service.domain.ports.output.message.publisher.OrderApprovedMessagePublisher;
-import com.andrei.food.ordering.system.restaurant.service.domain.ports.output.message.publisher.OrderRejectedMessagePublisher;
+import com.andrei.food.ordering.system.restaurant.service.domain.outbox.model.OrderOutboxMessage;
+import com.andrei.food.ordering.system.restaurant.service.domain.outbox.scheduler.OrderOutboxHelper;
+import com.andrei.food.ordering.system.restaurant.service.domain.ports.output.message.publisher.RestaurantApprovalResponseMessagePublisher;
 import com.andrei.food.ordering.system.restaurant.service.domain.ports.output.repository.OrderApprovalRepository;
 import com.andrei.food.ordering.system.restaurant.service.domain.ports.output.repository.RestaurantRepository;
 import com.andrei.food.ordering.system.service.valueobject.OrderId;
@@ -28,19 +30,29 @@ public class RestaurantApprovalRequestHelper {
     private final RestaurantDataMapper restaurantDataMapper;
     private final RestaurantRepository restaurantRepository;
     private final OrderApprovalRepository orderApprovalRepository;
-    private final OrderApprovedMessagePublisher orderApprovedMessagePublisher;
-    private final OrderRejectedMessagePublisher orderRejectedMessagePublisher;
+    private final OrderOutboxHelper orderOutboxHelper;
+    private final RestaurantApprovalResponseMessagePublisher restaurantApprovalResponseMessagePublisher;
 
     @Transactional
-    public OrderApprovalEvent persistOrderApproval(RestaurantApprovalRequest restaurantApprovalRequest) {
+    public void persistOrderApproval(RestaurantApprovalRequest restaurantApprovalRequest) {
+        if (publishIfOutboxMessageProcessed(restaurantApprovalRequest)) {
+            log.info("An outbox message with saga id: {} already saved to database!",
+                    restaurantApprovalRequest.getSagaId());
+            return;
+        }
+
         log.info("Processing restaurant approval for order {}", restaurantApprovalRequest.getOrderId());
         List<String> failureMessages = new ArrayList<>();
         Restaurant restaurant = findRestaurant(restaurantApprovalRequest);
-        OrderApprovalEvent orderApprovalEvent = restaurantDomainService.validateOrder(restaurant, failureMessages, orderApprovedMessagePublisher, orderRejectedMessagePublisher);
+        OrderApprovalEvent orderApprovalEvent = restaurantDomainService.validateOrder(restaurant, failureMessages);
 
         orderApprovalRepository.save(orderApprovalEvent.getOrderApproval());
 
-        return orderApprovalEvent;
+        orderOutboxHelper
+                .saveOrderOutboxMessage(restaurantDataMapper.orderApprovalEventToOrderEventPayload(orderApprovalEvent),
+                        orderApprovalEvent.getOrderApproval().getApprovalStatus(),
+                        OutboxStatus.STARTED,
+                        UUID.fromString(restaurantApprovalRequest.getSagaId()));
     }
 
     private Restaurant findRestaurant(RestaurantApprovalRequest restaurantApprovalRequest) {
@@ -58,13 +70,22 @@ public class RestaurantApprovalRequestHelper {
                   .findFirst()
                   .ifPresent(productEntity -> {
                       product.updateWithConfirmedNamePriceAndAvailability(productEntity.getName(), productEntity.getPrice(), productEntity.isAvailable());
-
                   });
         });
 
         restaurant.getOrderDetail().setId(new OrderId(UUID.fromString(restaurantApprovalRequest.getOrderId())));
 
         return restaurant;
+    }
 
+    private boolean publishIfOutboxMessageProcessed(RestaurantApprovalRequest restaurantApprovalRequest) {
+        return orderOutboxHelper.getCompletedOrderOutboxMessageBySagaIdAndOutboxStatus(
+                        UUID.fromString(restaurantApprovalRequest.getSagaId()), OutboxStatus.COMPLETED)
+                .map(orderOutboxMessage -> {
+                    restaurantApprovalResponseMessagePublisher.publish(orderOutboxMessage, orderOutboxHelper::updateOutboxStatus);
+                    log.info("Order outbox message with id {} is processed", orderOutboxMessage.getId());
+                    return true;
+                })
+                .orElse(false);
     }
 }

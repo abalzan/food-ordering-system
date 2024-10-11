@@ -7,6 +7,7 @@ import com.andrei.food.ordering.system.restaurant.service.domain.dto.RestaurantA
 import com.andrei.food.ordering.system.restaurant.service.domain.entity.Product;
 import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderApprovedEvent;
 import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderRejectedEvent;
+import com.andrei.food.ordering.system.restaurant.service.domain.outbox.model.OrderEventPayload;
 import com.andrei.food.ordering.system.service.valueobject.ProductId;
 import com.andrei.food.ordering.system.service.valueobject.RestaurantOrderStatus;
 import org.springframework.stereotype.Component;
@@ -16,36 +17,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class RestaurantMessagingDataMapper {
-    public RestaurantApprovalResponseAvroModel
-    orderApprovedEventToRestaurantApprovalResponseAvroModel(OrderApprovedEvent orderApprovedEvent) {
-        return RestaurantApprovalResponseAvroModel.newBuilder()
-                .setId(UUID.randomUUID())
-                .setSagaId(UUID.randomUUID())
-                .setOrderId(orderApprovedEvent.getOrderApproval().getOrderId().getValue())
-                .setRestaurantId(orderApprovedEvent.getRestaurantId().getValue())
-                .setCreatedAt(orderApprovedEvent.getCreatedAt().toInstant())
-                .setOrderApprovalStatus(OrderApprovalStatus.valueOf(orderApprovedEvent.
-                        getOrderApproval().getApprovalStatus().name()))
-                .setFailureMessages(orderApprovedEvent.getFailureMessages())
-                .build();
-    }
-
-    public RestaurantApprovalResponseAvroModel
-    orderRejectedEventToRestaurantApprovalResponseAvroModel(OrderRejectedEvent orderRejectedEvent) {
-        return RestaurantApprovalResponseAvroModel.newBuilder()
-                .setId(UUID.randomUUID())
-                .setSagaId(UUID.randomUUID())
-                .setOrderId(orderRejectedEvent.getOrderApproval().getOrderId().getValue())
-                .setRestaurantId(orderRejectedEvent.getRestaurantId().getValue())
-                .setCreatedAt(orderRejectedEvent.getCreatedAt().toInstant())
-                .setOrderApprovalStatus(OrderApprovalStatus.valueOf(orderRejectedEvent.
-                        getOrderApproval().getApprovalStatus().name()))
-                .setFailureMessages(orderRejectedEvent.getFailureMessages())
-                .build();
-    }
-
-    public RestaurantApprovalRequest
-    restaurantApprovalRequestAvroModelToRestaurantApproval(RestaurantApprovalRequestAvroModel
+    public RestaurantApprovalRequest restaurantApprovalRequestAvroModelToRestaurantApproval(RestaurantApprovalRequestAvroModel
                                                                    restaurantApprovalRequestAvroModel) {
         return RestaurantApprovalRequest.builder()
                 .id(restaurantApprovalRequestAvroModel.getId().toString())
@@ -63,6 +35,20 @@ public class RestaurantMessagingDataMapper {
                         .collect(Collectors.toList()))
                 .price(restaurantApprovalRequestAvroModel.getPrice())
                 .createdAt(restaurantApprovalRequestAvroModel.getCreatedAt())
+                .build();
+    }
+
+
+    public RestaurantApprovalResponseAvroModel orderEventPayloadToRestaurantApprovalResponseAvroModel(String sagaId,
+                                                                                                      OrderEventPayload orderEventPayload) {
+        return RestaurantApprovalResponseAvroModel.newBuilder()
+                .setId(UUID.randomUUID())
+                .setSagaId(UUID.fromString(sagaId))
+                .setOrderId(UUID.fromString(orderEventPayload.getOrderId()))
+                .setRestaurantId(UUID.fromString(orderEventPayload.getRestaurantId()))
+                .setCreatedAt(orderEventPayload.getCreatedAt().toInstant())
+                .setOrderApprovalStatus(OrderApprovalStatus.valueOf(orderEventPayload.getOrderApprovalStatus()))
+                .setFailureMessages(orderEventPayload.getFailureMessages())
                 .build();
     }
 }

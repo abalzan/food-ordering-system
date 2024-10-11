@@ -4,6 +4,8 @@ import com.andrei.food.ordering.system.restaurant.service.domain.dto.RestaurantA
 import com.andrei.food.ordering.system.restaurant.service.domain.entity.OrderDetail;
 import com.andrei.food.ordering.system.restaurant.service.domain.entity.Product;
 import com.andrei.food.ordering.system.restaurant.service.domain.entity.Restaurant;
+import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderApprovalEvent;
+import com.andrei.food.ordering.system.restaurant.service.domain.outbox.model.OrderEventPayload;
 import com.andrei.food.ordering.system.service.valueobject.*;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,17 @@ public class RestaurantDataMapper {
                         .totalAmount(new Money(restaurantApprovalRequest.getPrice()))
                         .orderStatus(OrderStatus.valueOf(restaurantApprovalRequest.getRestaurantOrderStatus().name()))
                         .build())
+                .build();
+    }
+
+    public OrderEventPayload
+    orderApprovalEventToOrderEventPayload(OrderApprovalEvent orderApprovalEvent) {
+        return OrderEventPayload.builder()
+                .orderId(orderApprovalEvent.getOrderApproval().getOrderId().getValue().toString())
+                .restaurantId(orderApprovalEvent.getRestaurantId().getValue().toString())
+                .orderApprovalStatus(orderApprovalEvent.getOrderApproval().getApprovalStatus().name())
+                .createdAt(orderApprovalEvent.getCreatedAt())
+                .failureMessages(orderApprovalEvent.getFailureMessages())
                 .build();
     }
 }

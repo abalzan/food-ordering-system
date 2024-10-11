@@ -1,40 +1,27 @@
 package com.andrei.food.ordering.system.restaurant.service.messaging.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import com.andrei.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
 import com.andrei.food.ordering.system.kafka.order.avro.model.Product;
 import com.andrei.food.ordering.system.kafka.order.avro.model.RestaurantApprovalRequestAvroModel;
 import com.andrei.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
 import com.andrei.food.ordering.system.restaurant.service.domain.dto.RestaurantApprovalRequest;
-import com.andrei.food.ordering.system.restaurant.service.domain.entity.OrderApproval;
-import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderApprovedEvent;
-import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderRejectedEvent;
-import com.andrei.food.ordering.system.restaurant.service.messaging.publisher.kafka.OrderApprovedKafkaMessagePublisher;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
-import com.andrei.food.ordering.system.service.valueobject.OrderId;
-import com.andrei.food.ordering.system.service.valueobject.RestaurantId;
+import com.andrei.food.ordering.system.restaurant.service.domain.outbox.model.OrderEventPayload;
 import com.andrei.food.ordering.system.service.valueobject.RestaurantOrderStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 class RestaurantMessagingDataMapperTest {
-
-    @Mock
-    private DomainEventPublisher<OrderApprovedEvent> orderApprovedEventDomainEventPublisher;
-    @Mock
-    private DomainEventPublisher<OrderRejectedEvent> orderRejectedEventDomainEventPublisher;
 
     @InjectMocks
     private RestaurantMessagingDataMapper restaurantMessagingDataMapper;
@@ -45,39 +32,7 @@ class RestaurantMessagingDataMapperTest {
     }
 
     @Test
-    void orderApprovedEventToRestaurantApprovalResponseAvroModelReturnsAvroModel() {
-        OrderId orderUUID = new OrderId(UUID.randomUUID());
-        RestaurantId restaurantUUID = new RestaurantId(UUID.randomUUID());
-        OrderApproval orderApproval = OrderApproval.builder()
-                .orderId(orderUUID)
-                .approvalStatus(com.andrei.food.ordering.system.service.valueobject.OrderApprovalStatus.APPROVED)
-                .build();
-        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(orderApproval, restaurantUUID,  List.of(), ZonedDateTime.now(), orderApprovedEventDomainEventPublisher);
-
-        RestaurantApprovalResponseAvroModel result = restaurantMessagingDataMapper.orderApprovedEventToRestaurantApprovalResponseAvroModel(orderApprovedEvent);
-
-        assertNotNull(result);
-        assertEquals(OrderApprovalStatus.APPROVED, result.getOrderApprovalStatus());
-    }
-
-    @Test
-    void orderRejectedEventToRestaurantApprovalResponseAvroModelReturnsAvroModel() {
-        OrderId orderUUID = new OrderId(UUID.randomUUID());
-        RestaurantId restaurantUUID = new RestaurantId(UUID.randomUUID());
-        OrderApproval orderApproval = OrderApproval.builder()
-                .orderId(orderUUID)
-                .approvalStatus(com.andrei.food.ordering.system.service.valueobject.OrderApprovalStatus.REJECTED)
-                .build();
-        OrderRejectedEvent orderRejectedEvent = new OrderRejectedEvent(orderApproval, restaurantUUID,  List.of("Reason"), ZonedDateTime.now(), orderRejectedEventDomainEventPublisher);
-
-        RestaurantApprovalResponseAvroModel result = restaurantMessagingDataMapper.orderRejectedEventToRestaurantApprovalResponseAvroModel(orderRejectedEvent);
-
-        assertNotNull(result);
-        assertEquals(OrderApprovalStatus.REJECTED, result.getOrderApprovalStatus());
-        assertEquals("Reason", result.getFailureMessages().get(0));
-    }
-
-    @Test
+    @DisplayName("Returns RestaurantApprovalRequest from AvroModel")
     void restaurantApprovalRequestAvroModelToRestaurantApprovalReturnsRequest() {
         RestaurantApprovalRequestAvroModel avroModel = RestaurantApprovalRequestAvroModel.newBuilder()
                 .setId(UUID.randomUUID())
@@ -96,6 +51,46 @@ class RestaurantMessagingDataMapperTest {
         RestaurantApprovalRequest result = restaurantMessagingDataMapper.restaurantApprovalRequestAvroModelToRestaurantApproval(avroModel);
 
         assertNotNull(result);
+        assertEquals(avroModel.getId().toString(), result.getId());
+        assertEquals(avroModel.getSagaId().toString(), result.getSagaId());
+        assertEquals(avroModel.getRestaurantId().toString(), result.getRestaurantId());
+        assertEquals(avroModel.getOrderId().toString(), result.getOrderId());
         assertEquals(RestaurantOrderStatus.PAID, result.getRestaurantOrderStatus());
+        assertEquals(avroModel.getProducts().get(0).getId(), result.getProducts().get(0).getId().getValue().toString());
+        assertEquals(avroModel.getProducts().get(0).getQuantity(), result.getProducts().get(0).getQuantity());
+        assertEquals(avroModel.getPrice(), result.getPrice());
+        assertEquals(avroModel.getCreatedAt(), result.getCreatedAt());
+    }
+
+    @Test
+    @DisplayName("Returns RestaurantApprovalResponseAvroModel from OrderEventPayload")
+    void orderEventPayloadToRestaurantApprovalResponseAvroModelReturnsAvroModel() {
+        String sagaId = UUID.randomUUID().toString();
+        OrderEventPayload orderEventPayload = OrderEventPayload.builder()
+                .orderId(UUID.randomUUID().toString())
+                .restaurantId(UUID.randomUUID().toString())
+                .createdAt(ZonedDateTime.now())
+                .orderApprovalStatus("APPROVED")
+                .failureMessages(Collections.emptyList())
+                .build();
+
+        RestaurantApprovalResponseAvroModel result = restaurantMessagingDataMapper.orderEventPayloadToRestaurantApprovalResponseAvroModel(sagaId, orderEventPayload);
+
+        assertNotNull(result);
+        assertEquals(sagaId, result.getSagaId().toString());
+        assertEquals(orderEventPayload.getOrderId(), result.getOrderId().toString());
+        assertEquals(orderEventPayload.getRestaurantId(), result.getRestaurantId().toString());
+        assertEquals(orderEventPayload.getCreatedAt().toInstant().truncatedTo(ChronoUnit.MILLIS), result.getCreatedAt().truncatedTo(ChronoUnit.MILLIS));        assertEquals(OrderApprovalStatus.APPROVED, result.getOrderApprovalStatus());
+        assertTrue(result.getFailureMessages().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Handles null OrderEventPayload gracefully")
+    void orderEventPayloadToRestaurantApprovalResponseAvroModelHandlesNullPayload() {
+        String sagaId = UUID.randomUUID().toString();
+
+        assertThrows(NullPointerException.class, () -> {
+            restaurantMessagingDataMapper.orderEventPayloadToRestaurantApprovalResponseAvroModel(sagaId, null);
+        });
     }
 }

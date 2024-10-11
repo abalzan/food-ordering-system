@@ -26,5 +26,9 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.andrei.food.ordering.system</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
     </dependencies>
 </project>

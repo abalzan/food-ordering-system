@@ -5,7 +5,6 @@ import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 
 import java.util.List;
 

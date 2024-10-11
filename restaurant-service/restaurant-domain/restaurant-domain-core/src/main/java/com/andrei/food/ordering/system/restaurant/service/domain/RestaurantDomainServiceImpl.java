@@ -5,7 +5,6 @@ import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderAppr
 import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderApprovedEvent;
 import com.andrei.food.ordering.system.restaurant.service.domain.event.OrderRejectedEvent;
 import com.andrei.food.ordering.system.service.DomainConstants;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.valueobject.OrderApprovalStatus;
 import lombok.extern.slf4j.Slf4j;
 

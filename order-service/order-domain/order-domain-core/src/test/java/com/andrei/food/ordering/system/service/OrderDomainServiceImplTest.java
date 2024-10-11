@@ -7,7 +7,6 @@ import com.andrei.food.ordering.system.service.entity.Restaurant;
 import com.andrei.food.ordering.system.service.event.OrderCancelledEvent;
 import com.andrei.food.ordering.system.service.event.OrderCreatedEvent;
 import com.andrei.food.ordering.system.service.event.OrderPaidEvent;
-import com.andrei.food.ordering.system.service.events.publisher.DomainEventPublisher;
 import com.andrei.food.ordering.system.service.exception.OrderDomainException;
 import com.andrei.food.ordering.system.service.valueobject.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,17 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class OrderDomainServiceImplTest {
-
-    private DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher;
-    private DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher;
-    private DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher;
-
-    @BeforeEach
-    void setUp() {
-        orderCreatedEventDomainEventPublisher = mock(DomainEventPublisher.class);
-        orderCancelledEventDomainEventPublisher = mock(DomainEventPublisher.class);
-        orderPaidEventDomainEventPublisher = mock(DomainEventPublisher.class);
-    }
 
     @Test
     void validateAndInitiateOrderShouldCreateOrderWhenRestaurantIsActiveAndProductsAreValid() {

@@ -24,8 +24,7 @@ public class KafkaMessageHelper {
                      String orderId, String avroModelName) {
         return (result, ex) -> {
             if (ex != null) {
-                log.error("Error while sending " + avroModelName +
-                        " message to kafka topic: " + responseTopicName + " with message: " + requestAvroModel + " for orderId: " + orderId, ex);
+                log.error("Error while sending {} message to kafka topic: {} with message: {} for orderId: {}", avroModelName, responseTopicName, requestAvroModel, orderId, ex);
                 outboxCallback.accept(outboxMessage, OutboxStatus.FAILED);
             } else {
                 RecordMetadata metadata = result.getRecordMetadata();

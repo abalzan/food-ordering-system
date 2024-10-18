@@ -4,10 +4,12 @@ import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderComm
 import com.andrei.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderAddress;
 import com.andrei.food.ordering.system.service.domain.dto.create.OrderItem;
+import com.andrei.food.ordering.system.service.domain.dto.message.CustomerModel;
 import com.andrei.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
 import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventPayload;
 import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventProduct;
 import com.andrei.food.ordering.system.service.domain.outbox.model.payment.OrderPaymentEventPayload;
+import com.andrei.food.ordering.system.service.entity.Customer;
 import com.andrei.food.ordering.system.service.entity.Order;
 import com.andrei.food.ordering.system.service.entity.Product;
 import com.andrei.food.ordering.system.service.entity.Restaurant;
@@ -93,6 +95,12 @@ public class OrderDataMapper {
                 .build();
     }
 
+    public Customer customerModelToCustomer(CustomerModel customerModel) {
+        return new Customer(new CustomerId(UUID.fromString(customerModel.id())),
+                customerModel.userName(),
+                customerModel.firstName(),
+                customerModel.lastName());
+    }
 
     private List<com.andrei.food.ordering.system.service.entity.OrderItem> orderItemsToOrderItemsEntities(List<OrderItem> orderItems) {
         return orderItems.stream().map(orderItem -> com.andrei.food.ordering.system.service.entity.OrderItem.builder()

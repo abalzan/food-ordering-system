@@ -1,6 +1,7 @@
 package com.andrei.food.ordering.system.service.dataaccess.order.adapter;
 
 import com.andrei.food.ordering.system.service.entity.Order;
+import com.andrei.food.ordering.system.service.valueobject.OrderId;
 import com.andrei.food.ordering.system.service.valueobject.TrackingId;
 import com.andrei.food.ordering.system.service.dataaccess.order.entity.OrderEntity;
 import com.andrei.food.ordering.system.service.dataaccess.order.repository.OrderJpaRepository;
@@ -54,5 +55,30 @@ class OrderRepositoryImplTest {
         Optional<Order> foundOrder = orderRepositoryImpl.findByTrackingId(trackingId);
 
         assertEquals(Optional.of(order), foundOrder);
+    }
+
+    @Test
+    void shouldFindByIdSuccessfully() {
+        OrderId orderId = new OrderId(UUID.randomUUID());
+        Order order = Order.builder().build();
+        OrderEntity orderEntity = new OrderEntity();
+
+        when(orderJpaRepository.findById(orderId.getValue())).thenReturn(Optional.of(orderEntity));
+        when(orderDataAccessMapper.orderEntityToOrder(orderEntity)).thenReturn(order);
+
+        Optional<Order> foundOrder = orderRepositoryImpl.findById(orderId);
+
+        assertEquals(Optional.of(order), foundOrder);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenOrderNotFoundById() {
+        OrderId orderId = new OrderId(UUID.randomUUID());
+
+        when(orderJpaRepository.findById(orderId.getValue())).thenReturn(Optional.empty());
+
+        Optional<Order> foundOrder = orderRepositoryImpl.findById(orderId);
+
+        assertEquals(Optional.empty(), foundOrder);
     }
 }

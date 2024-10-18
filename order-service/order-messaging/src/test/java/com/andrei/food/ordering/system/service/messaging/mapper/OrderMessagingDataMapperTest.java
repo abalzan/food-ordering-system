@@ -1,6 +1,7 @@
 package com.andrei.food.ordering.system.service.messaging.mapper;
 
 import com.andrei.food.ordering.system.kafka.order.avro.model.*;
+import com.andrei.food.ordering.system.service.domain.dto.message.CustomerModel;
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
 import com.andrei.food.ordering.system.service.domain.dto.message.RestaurantApprovalResponse;
 import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventPayload;
@@ -103,4 +104,17 @@ class OrderMessagingDataMapperTest {
         assertEquals(payload.getCreatedAt().toInstant().truncatedTo(ChronoUnit.MILLIS), avroModel.getCreatedAt().truncatedTo(ChronoUnit.MILLIS));
         assertEquals(payload.getProducts().size(), avroModel.getProducts().size());
     }
+
+    @Test
+    void convertsCustomerAvroModelToCustomerModelSuccessfully() {
+        CustomerAvroModel avroModel = new CustomerAvroModel(UUID.randomUUID(), "john_doe", "John", "Doe");
+
+        CustomerModel customerModel = orderMessagingDataMapper.customerAvroModelToCustomerModel(avroModel);
+
+        assertEquals(avroModel.getId().toString(), customerModel.id());
+        assertEquals(avroModel.getUsername(), customerModel.userName());
+        assertEquals(avroModel.getFirstName(), customerModel.firstName());
+        assertEquals(avroModel.getLastName(), customerModel.lastName());
+    }
+
 }

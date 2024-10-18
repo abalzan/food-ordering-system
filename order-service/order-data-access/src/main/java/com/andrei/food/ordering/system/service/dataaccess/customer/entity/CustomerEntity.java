@@ -12,9 +12,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@Table(name = "order_customer_m_view", schema = "customer")
+@Table(name = "customers")
 @Entity
 public class CustomerEntity {
     @Id
     private UUID id;
+    private String userName,
+            firstName,
+            lastName;
 }

@@ -1,5 +1,6 @@
 package com.andrei.food.ordering.system.service.messaging.mapper;
 
+import com.andrei.food.ordering.system.service.domain.dto.message.CustomerModel;
 import com.andrei.food.ordering.system.service.domain.dto.message.PaymentResponse;
 import com.andrei.food.ordering.system.service.domain.dto.message.RestaurantApprovalResponse;
 import com.andrei.food.ordering.system.service.domain.outbox.model.approval.OrderApprovalEventPayload;
@@ -67,4 +68,13 @@ public class OrderMessagingDataMapper {
                     .setCreatedAt(orderApprovalEventPayload.getCreatedAt().toInstant())
                     .build();
         }
+
+    public CustomerModel customerAvroModelToCustomerModel(CustomerAvroModel customerAvroModel) {
+        return new CustomerModel(
+                customerAvroModel.getId().toString(),
+                customerAvroModel.getUsername(),
+                customerAvroModel.getFirstName(),
+                customerAvroModel.getLastName()
+        );
+    }
 }

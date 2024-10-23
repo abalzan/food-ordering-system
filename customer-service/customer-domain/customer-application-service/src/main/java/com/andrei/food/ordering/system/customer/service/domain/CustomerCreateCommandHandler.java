@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @AllArgsConstructor
-class CustomerCreateCommandHandler {
+public class CustomerCreateCommandHandler {
 
     private final CustomerDomainService customerDomainService;
 

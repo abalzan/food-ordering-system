@@ -1,5 +1,6 @@
 package com.andrei.food.ordering.system.service.dataaccess.customer.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,7 +18,10 @@ import java.util.UUID;
 public class CustomerEntity {
     @Id
     private UUID id;
-    private String userName,
-            firstName,
-            lastName;
+    @Column(name = "username")
+    private String userName;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
 }

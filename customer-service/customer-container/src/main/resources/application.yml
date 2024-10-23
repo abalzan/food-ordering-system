@@ -1,3 +1,8 @@
+server:
+  port: 8184
+customer-service:
+  customer-topic-name: customer
+
 spring:
   jpa:
     open-in-view: false

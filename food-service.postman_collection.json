@@ -105,6 +105,33 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "create_customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customerId\": \"d215b5f8-0249-4dc5-89a3-51fd148cfb41\",\n    \"username\": \"user1\",\n    \"firstName\": \"My first name\",\n    \"lastName\": \"surname\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/customers",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
